@@ -181,9 +181,19 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
 
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
         }
 
         .form-group {
@@ -198,6 +208,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             font-size: 0.95rem;
         }
 
+        .form-group input[type="text"],
+        .form-group textarea,
         .form-group input[type="date"] {
             padding: 1rem;
             border: 1px solid #cbd5e1;
@@ -210,10 +222,42 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-        .form-group input[type="date"]:focus {
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 16px;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .terms-checkbox label {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #166534;
+            cursor: pointer;
         }
 
         .btn-submit {
@@ -301,6 +345,21 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             <div class="form-section" id="formSection" style="display: none;">
                 <form id="peminjamanForm">
                     <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="nama_kegiatan">Nama Kegiatan / Acara</label>
+                            <input type="text" id="nama_kegiatan" placeholder="Contoh: Rapat Kerja BEM 2026" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="tujuan">Tujuan / Keperluan Peminjaman</label>
+                            <textarea id="tujuan" placeholder="Jelaskan secara singkat untuk apa barang ini digunakan..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="lokasi">Lokasi Penggunaan (Tempat Acara)</label>
+                            <input type="text" id="lokasi" placeholder="Contoh: Gedung A Ruang 101" required>
+                        </div>
+
                         <div class="form-group">
                             <label for="tgl_pinjam">Tanggal Pinjam</label>
                             <input type="date" id="tgl_pinjam" required>
@@ -309,6 +368,16 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                             <label for="tgl_kembali">Tanggal Kembali (Rencana)</label>
                             <input type="date" id="tgl_kembali" required>
                         </div>
+                    </div>
+                    
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="syarat_ketentuan" required>
+                        <label for="syarat_ketentuan">
+                            <strong>Saya menyetujui Syarat & Ketentuan Peminjaman:</strong><br>
+                            1. Bersedia menjaga barang dengan baik selama masa peminjaman.<br>
+                            2. Akan mengembalikan barang tepat waktu sesuai tanggal rencana kembali.<br>
+                            3. Bersedia mengganti rugi jika terjadi kerusakan atau kehilangan barang akibat kelalaian pribadi/kepanitiaan.
+                        </label>
                     </div>
                     
                     <button type="submit" class="btn-submit" id="btnSubmit">
@@ -402,8 +471,17 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             const cart = getCart();
             if (cart.length === 0) return;
 
+            const nama_kegiatan = document.getElementById('nama_kegiatan').value;
+            const tujuan = document.getElementById('tujuan').value;
+            const lokasi = document.getElementById('lokasi').value;
             const tgl_pinjam = document.getElementById('tgl_pinjam').value;
             const tgl_kembali = document.getElementById('tgl_kembali').value;
+            const termsChecked = document.getElementById('syarat_ketentuan').checked;
+
+            if (!termsChecked) {
+                alert('Anda harus menyetujui Syarat & Ketentuan Peminjaman.');
+                return;
+            }
 
             if (tgl_kembali < tgl_pinjam) {
                 alert('Tanggal kembali tidak boleh lebih awal dari tanggal pinjam.');
@@ -411,6 +489,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             }
 
             const payload = {
+                nama_kegiatan,
+                tujuan,
+                lokasi,
                 tgl_pinjam,
                 tgl_kembali,
                 items: cart.map(item => ({

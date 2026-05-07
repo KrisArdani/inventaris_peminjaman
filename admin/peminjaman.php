@@ -153,6 +153,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
         <!-- Data Table -->
         <div class="table-card">
             <div class="table-wrapper">
+
                 <table class="data-table" id="peminjamanTable">
                     <thead>
                         <tr>
@@ -227,6 +228,18 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                         <label class="form-label">Peminjam (Anggota) <span style="color:var(--error)">*</span></label>
                         <select class="form-select" id="inpUser"><option value="">Pilih anggota…</option></select>
                         <span class="form-error">Pilih peminjam</span>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Nama Kegiatan / Acara</label>
+                        <input type="text" class="form-input" id="inpKegiatan" placeholder="Contoh: Rapat Kerja BEM 2026">
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Tujuan / Keperluan</label>
+                        <textarea class="form-input" id="inpTujuan" rows="2" placeholder="Jelaskan keperluan peminjaman"></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Lokasi Penggunaan</label>
+                        <input type="text" class="form-input" id="inpLokasi" placeholder="Contoh: Gedung A Ruang 101">
                     </div>
                     <div class="form-group" id="grpTglPinjam">
                         <label class="form-label">Tanggal Pinjam <span style="color:var(--error)">*</span></label>

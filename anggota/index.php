@@ -414,10 +414,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
         <div class="welcome-card">
             <div class="welcome-text">
                 <h1>Halo, <?= htmlspecialchars(explode(' ', trim($_SESSION['nama_lengkap']))[0]); ?>! 👋</h1>
-                <p>Selamat datang di Dashboard Anggota BEM. Pantau status peminjaman Anda, lihat riwayat, atau mulai ajukan peminjaman barang baru dengan mudah.</p>
+                <p>Selamat datang di Dashboard Anggota BEM. Pantau status peminjaman, lihat riwayat, atau jelajahi katalog inventaris barang BEM Politeknik Purbaya.</p>
             </div>
             <div class="action-btns">
-                <a href="katalog.php" class="btn"><i class="fa-solid fa-layer-group" style="margin-right: 0.5rem;"></i> Eksplor Katalog</a>
+                <a href="katalog.php" class="btn"><i class="fa-solid fa-layer-group" style="margin-right: 0.5rem;"></i> Eksplor Inventaris</a>
             </div>
         </div>
 
@@ -509,6 +509,18 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                 <div>
                     <strong>Status Persetujuan</strong>
                     <div id="detStatusApproval" style="margin-top: 0.25rem;"></div>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <strong>Nama Kegiatan</strong>
+                    <span id="detKegiatan"></span>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <strong>Tujuan / Keperluan</strong>
+                    <span id="detTujuan"></span>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <strong>Lokasi Penggunaan</strong>
+                    <span id="detLokasi"></span>
                 </div>
             </div>
 
@@ -643,6 +655,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                     document.getElementById('detTglPengajuan').innerHTML = `${dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })} <span style="color:#64748b; font-weight:normal;">pukul ${dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>`;
                     
                     document.getElementById('detStatusApproval').innerHTML = getStatusBadge(p.status_approval);
+                    document.getElementById('detKegiatan').textContent = p.nama_kegiatan || '-';
+                    document.getElementById('detTujuan').textContent = p.tujuan || '-';
+                    document.getElementById('detLokasi').textContent = p.lokasi || '-';
 
                     const tolakCont = document.getElementById('alasanTolakContainer');
                     if (p.status_approval === 'ditolak' && p.alasan_tolak) {

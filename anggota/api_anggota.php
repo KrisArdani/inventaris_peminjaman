@@ -35,8 +35,11 @@ try {
             $items       = $data['items'] ?? [];
             $tgl_pinjam  = $data['tgl_pinjam'] ?? '';
             $tgl_kembali = $data['tgl_kembali'] ?? '';
+            $nama_kegiatan = $data['nama_kegiatan'] ?? '';
+            $tujuan      = $data['tujuan'] ?? '';
+            $lokasi      = $data['lokasi'] ?? '';
 
-            if (empty($items) || !$tgl_pinjam || !$tgl_kembali) {
+            if (empty($items) || !$tgl_pinjam || !$tgl_kembali || !$nama_kegiatan || !$tujuan || !$lokasi) {
                 throw new Exception('Data pengajuan tidak lengkap');
             }
 
@@ -54,8 +57,8 @@ try {
             // Generate ID Peminjaman
             $id_peminjaman = 'PMJ-' . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
 
-            $stmt = $koneksi->prepare("INSERT INTO peminjaman (id_peminjaman, id_user, status_approval) VALUES (?, ?, 'pending')");
-            $stmt->execute([$id_peminjaman, $id_user]);
+            $stmt = $koneksi->prepare("INSERT INTO peminjaman (id_peminjaman, id_user, status_approval, nama_kegiatan, tujuan, lokasi) VALUES (?, ?, 'pending', ?, ?, ?)");
+            $stmt->execute([$id_peminjaman, $id_user, $nama_kegiatan, $tujuan, $lokasi]);
 
             // Cek ketersediaan stok sementara dan insert detail
             foreach ($items as $item) {

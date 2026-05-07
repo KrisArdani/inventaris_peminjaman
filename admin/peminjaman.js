@@ -235,6 +235,18 @@
                         <span class="detail-label">Tanggal Pengajuan</span>
                         <span class="detail-value">${formatDate(p.tgl_pengajuan)}</span>
                     </div>
+                    <div class="detail-field" style="grid-column: 1 / -1;">
+                        <span class="detail-label">Nama Kegiatan</span>
+                        <span class="detail-value">${p.nama_kegiatan ? esc(p.nama_kegiatan) : '—'}</span>
+                    </div>
+                    <div class="detail-field" style="grid-column: 1 / -1;">
+                        <span class="detail-label">Tujuan / Keperluan</span>
+                        <span class="detail-value">${p.tujuan ? esc(p.tujuan) : '—'}</span>
+                    </div>
+                    <div class="detail-field" style="grid-column: 1 / -1;">
+                        <span class="detail-label">Lokasi Penggunaan</span>
+                        <span class="detail-value">${p.lokasi ? esc(p.lokasi) : '—'}</span>
+                    </div>
                     ${p.admin_nama ? `<div class="detail-field">
                         <span class="detail-label">Diproses Oleh</span>
                         <span class="detail-value">${esc(p.admin_nama)}</span>
@@ -386,6 +398,9 @@
         const id_user = $('#inpUser').value;
         const tgl_pinjam = $('#inpTglPinjam').value;
         const tgl_kembali = $('#inpTglKembali').value;
+        const nama_kegiatan = $('#inpKegiatan').value;
+        const tujuan = $('#inpTujuan').value;
+        const lokasi = $('#inpLokasi').value;
 
         if (!id_user) { $('#grpUser').classList.add('has-error'); valid = false; }
         if (!tgl_pinjam) { $('#grpTglPinjam').classList.add('has-error'); valid = false; }
@@ -411,7 +426,7 @@
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan…';
 
         try {
-            const r = await apiPost('create', { id_user, items, tgl_pinjam, tgl_kembali });
+            const r = await apiPost('create', { id_user, items, tgl_pinjam, tgl_kembali, nama_kegiatan, tujuan, lokasi });
             if (r.success) {
                 showToast(r.message, 'success');
                 modalCreate.classList.remove('active');

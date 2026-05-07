@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `barang` (
     `id_barang` INT(11) NOT NULL AUTO_INCREMENT,
     `kode_barang` VARCHAR(50) NOT NULL UNIQUE,
     `nama_barang` VARCHAR(255) NOT NULL,
-    `kategori` ENUM('Elektronik', 'Furniture', 'Alat Tulis', 'Perlengkapan', 'Olahraga', 'Lainnya') NOT NULL DEFAULT 'Lainnya',
+    `kategori` ENUM('Barang Habis Pakai', 'Barang Tidak Habis Pakai') NOT NULL DEFAULT 'Barang Tidak Habis Pakai',
     `jumlah_total` INT(11) NOT NULL DEFAULT 0,
     `jumlah_tersedia` INT(11) NOT NULL DEFAULT 0,
     `kondisi` ENUM('Baik', 'Rusak Ringan', 'Rusak Berat') NOT NULL DEFAULT 'Baik',

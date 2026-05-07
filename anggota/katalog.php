@@ -589,7 +589,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
 
     <header class="katalog-header">
         <h1>Katalog Inventaris</h1>
-        <p>Eksplorasi dan temukan perlengkapan yang Anda butuhkan. Klik pada barang untuk melihat detail dan mulai meminjam.</p>
+        <p>Sistem Pendataan & Informasi Barang Inventaris Politeknik Purbaya.</p>
     </header>
 
     <div class="container">
@@ -600,12 +600,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             </div>
             <select id="kategoriFilter" class="filter-kategori">
                 <option value="">Semua Kategori</option>
-                <option value="Elektronik">Elektronik</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Alat Tulis">Alat Tulis</option>
-                <option value="Perlengkapan">Perlengkapan</option>
-                <option value="Olahraga">Olahraga</option>
-                <option value="Lainnya">Lainnya</option>
+                <option value="Barang Habis Pakai">Barang Habis Pakai</option>
+                <option value="Barang Tidak Habis Pakai">Barang Tidak Habis Pakai</option>
             </select>
         </div>
 
@@ -674,15 +670,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
         }
 
         function getIconForKategori(kat) {
-            const icons = {
-                'Elektronik': 'fa-laptop',
-                'Furniture': 'fa-chair',
-                'Alat Tulis': 'fa-pen-ruler',
-                'Perlengkapan': 'fa-toolbox',
-                'Olahraga': 'fa-basketball',
-                'Lainnya': 'fa-box-archive'
-            };
-            return icons[kat] || 'fa-box';
+            const k = (kat || '').toLowerCase();
+            if (k.includes('tidak habis')) return 'fa-box-archive';
+            if (k.includes('habis')) return 'fa-box-open';
+            return 'fa-box';
         }
 
         function renderGrid() {

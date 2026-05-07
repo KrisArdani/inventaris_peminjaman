@@ -141,8 +141,8 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                 </div>
                 <select class="filter-select" id="filterKategori">
                     <option value="">Semua Kategori</option>
-                    <option value="Habis Pakai">Habis Pakai</option>
-                    <option value="Tidak Habis Pakai">Tidak Habis Pakai</option>
+                    <option value="Barang Habis Pakai">Barang Habis Pakai</option>
+                    <option value="Barang Tidak Habis Pakai">Barang Tidak Habis Pakai</option>
                 </select>
             </div>
             <button class="btn btn-secondary" id="btnRefresh">
@@ -204,8 +204,8 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                         <label class="form-label">Kategori <span style="color:var(--error)">*</span></label>
                         <select class="form-select" id="inpKategori">
                             <option value="">Pilih kategori</option>
-                            <option value="Habis Pakai">Habis Pakai</option>
-                            <option value="Tidak Habis Pakai">Tidak Habis Pakai</option>
+                            <option value="Barang Habis Pakai">Barang Habis Pakai</option>
+                            <option value="Barang Tidak Habis Pakai">Barang Tidak Habis Pakai</option>
                         </select>
                         <span class="form-error" id="errKategori">Kategori wajib dipilih</span>
                     </div>

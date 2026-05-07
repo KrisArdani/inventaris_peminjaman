@@ -188,22 +188,23 @@ try {
             if ($method !== 'POST') throw new Exception('Method not allowed');
             $data = json_decode(file_get_contents('php://input'), true);
 
-            $id_user     = $data['id_user'] ?? '';
-            $items       = $data['items'] ?? [];
-            $tgl_pinjam  = $data['tgl_pinjam'] ?? '';
-            $tgl_kembali = $data['tgl_kembali'] ?? '';
+            $id_user       = $data['id_user'] ?? '';
+            $items         = $data['items'] ?? [];
+            $tgl_pinjam    = $data['tgl_pinjam'] ?? '';
+            $tgl_kembali   = $data['tgl_kembali'] ?? '';
+            $nama_kegiatan = $data['nama_kegiatan'] ?? '';
+            $tujuan        = $data['tujuan'] ?? '';
+            $lokasi        = $data['lokasi'] ?? '';
 
             if (!$id_user || empty($items) || !$tgl_pinjam || !$tgl_kembali) {
-                throw new Exception('Data tidak lengkap');
+                throw new Exception("Data tidak lengkap.");
             }
 
             $koneksi->beginTransaction();
-
-            // Generate ID
             $id_peminjaman = 'PMJ-' . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
 
-            $stmt = $koneksi->prepare("INSERT INTO peminjaman (id_peminjaman, id_user, status_approval, id_admin) VALUES (?, ?, 'disetujui', ?)");
-            $stmt->execute([$id_peminjaman, $id_user, $_SESSION['user_id']]);
+            $stmt = $koneksi->prepare("INSERT INTO peminjaman (id_peminjaman, id_user, status_approval, nama_kegiatan, tujuan, lokasi, id_admin) VALUES (?, ?, 'disetujui', ?, ?, ?, ?)");
+            $stmt->execute([$id_peminjaman, $id_user, $nama_kegiatan, $tujuan, $lokasi, $_SESSION['user_id']]);
 
             foreach ($items as $item) {
                 $id_detail = 'DTL-' . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
