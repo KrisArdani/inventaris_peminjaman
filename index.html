@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEM Politeknik Purbaya</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="logo-circle">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <span>BEM Purbaya</span>
+            </a>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Beranda</a>
+                <a href="#about" class="nav-link">Visi & Misi</a>
+                <a href="#departments" class="nav-link">Departemen</a>
+                <a href="#contact" class="nav-link">Hubungi Kami</a>
+                <a href="login.php" class="nav-link btn-contact"><i class="fa-solid fa-right-to-bracket"></i> Sistem Peminjaman</a>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-close"><i class="fa-solid fa-xmark"></i></div>
+        <a href="#home" class="mobile-link">Beranda</a>
+        <a href="#about" class="mobile-link">Visi & Misi</a>
+        <a href="#departments" class="mobile-link">Departemen</a>
+        <a href="#contact" class="mobile-link">Hubungi Kami</a>
+        <a href="login.php" class="mobile-link btn-contact-mobile"><i class="fa-solid fa-right-to-bracket"></i> Sistem Peminjaman</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="badge fade-up">Badan Eksekutif Mahasiswa</div>
+            <h1 class="hero-title fade-up delay-1">Politeknik Purbaya</h1>
+            <p class="hero-subtitle fade-up delay-2">Menjadi wadah aspirasi dan kolaborasi untuk mewujudkan mahasiswa yang progresif, inovatif, dan berintegritas tinggi.</p>
+            <div class="hero-cta fade-up delay-3">
+                <a href="#about" class="btn btn-outline">Kenali Kami Lebih Dekat</a>
+                <a href="login.php" class="btn btn-primary"><i class="fa-solid fa-boxes-stacked"></i> Pinjam Barang</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <a href="#about">
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Visi & Misi Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Visi & Misi</h2>
+                <div class="section-line"></div>
+                <p class="section-subtitle">Arah dan tujuan utama perjuangan BEM Politeknik Purbaya dalam melayani mahasiswa.</p>
+            </div>
+
+            <div class="about-grid">
+                <!-- Visi Card -->
+                <div class="visi-card reveal-left">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <h3>Visi Kami</h3>
+                    <p>Mewujudkan BEM yang terbuka, terlibat, dan berkolaborasi untuk menghadirkan program yang bermanfaat serta mendukung perkembangan seluruh mahasiswa politeknik purbaya.</p>
+                </div>
+
+                <!-- Misi List -->
+                <div class="misi-wrapper reveal-right">
+                    <h3>Misi Kami</h3>
+                    <ul class="misi-list">
+                        <li>
+                            <div class="misi-number">01</div>
+                            <div class="misi-text">
+                                Membangun komunikasi terbuka dan transparan antara BEM dan Mahasiswa.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="misi-number">02</div>
+                            <div class="misi-text">
+                                Mendorong kolaborasi dengan UKM dan ORMAWA dalam berbagai program kerja.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="misi-number">03</div>
+                            <div class="misi-text">
+                                Mengembangkan program kerja secara berkelanjutan dengan inovasi baru agar tetap relevan dengan dinamika mahasiswa.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics/Counter Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item reveal">
+                    <h3 class="stat-number">6+</h3>
+                    <p class="stat-label">Departemen Aktif</p>
+                </div>
+                <div class="stat-item reveal delay-1">
+                    <h3 class="stat-number">50+</h3>
+                    <p class="stat-label">Program Kerja</p>
+                </div>
+                <div class="stat-item reveal delay-2">
+                    <h3 class="stat-number">100+</h3>
+                    <p class="stat-label">Pengurus BEM</p>
+                </div>
+                <div class="stat-item reveal delay-3">
+                    <h3 class="stat-number">1K+</h3>
+                    <p class="stat-label">Mahasiswa Terlibat</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Departments Section -->
+    <section id="departments" class="departments">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Struktur Organisasi</h2>
+                <div class="section-line"></div>
+                <p class="section-subtitle">Mengenal lebih dekat motor penggerak BEM Politeknik Purbaya.</p>
+            </div>
+
+            <div class="dept-grid">
+                <!-- BPH -->
+                <div class="dept-card reveal">
+                    <div class="dept-icon"><i class="fa-solid fa-users-gear"></i></div>
+                    <h3>BPH</h3>
+                    <p>Badan Pengurus Harian yang mengkoordinasikan seluruh aktivitas dan administrasi BEM.</p>
+                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                </div>
+                
+                <!-- Dalam Negeri -->
+                <div class="dept-card reveal delay-1">
+                    <div class="dept-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <h3>Departemen Dalam Negeri</h3>
+                    <p>Fokus pada kesejahteraan, aspirasi, dan harmonisasi internal mahasiswa kampus.</p>
+                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                </div>
+
+                <!-- Luar Negeri -->
+                <div class="dept-card reveal delay-2">
+                    <div class="dept-icon"><i class="fa-solid fa-globe"></i></div>
+                    <h3>Departemen Luar Negeri</h3>
+                    <p>Membangun relasi dan kerja sama dengan instansi, kampus lain, serta pihak eksternal.</p>
+                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                </div>
+
+                <!-- Kominfo -->
+                <div class="dept-card reveal">
+                    <div class="dept-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
+                    <h3>Departemen Kominfo</h3>
+                    <p>Mengelola informasi, media sosial, publikasi, dan desain visual organisasi.</p>
+                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                </div>
+
+                <!-- Adkesma -->
+                <div class="dept-card reveal delay-1">
+                    <div class="dept-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                    <h3>Departemen Adkesma</h3>
+                    <p>Advokasi dan Kesejahteraan Mahasiswa untuk memastikan hak-hak mahasiswa terpenuhi.</p>
+                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                </div>
+
+                <!-- PSDM -->
+                <div class="dept-card reveal delay-2">
+                    <div class="dept-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                    <h3>Departemen PSDM</h3>
+                    <p>Pengembangan Sumber Daya Mahasiswa melalui pelatihan dan kaderisasi kepemimpinan.</p>
+                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta">
+        <div class="container reveal">
+            <div class="cta-box">
+                <h2>Mari Berkolaborasi Bersama Kami!</h2>
+                <p>Kami terbuka untuk ide, saran, dan kerjasama yang membangun demi kemajuan Politeknik Purbaya.</p>
+                <a href="#contact" class="btn btn-primary btn-lg">Sampaikan Aspirasi</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-circle small">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span>BEM Purbaya</span>
+                    </div>
+                    <p>Badan Eksekutif Mahasiswa Politeknik Purbaya. Terbuka, terlibat, dan berkolaborasi.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h3>Navigasi Cepat</h3>
+                    <ul>
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#about">Visi & Misi</a></li>
+                        <li><a href="#departments">Departemen</a></li>
+                        <li><a href="#">Berita Terbaru</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h3>Hubungi Kami</h3>
+                    <ul>
+                        <li><i class="fa-solid fa-location-dot"></i> Jl. Raya Purbaya, Gedung Kampus Utama, Ruang Sekretariat BEM</li>
+                        <li><i class="fa-solid fa-phone"></i> +62 812 3456 7890</li>
+                        <li><i class="fa-solid fa-envelope"></i> bem@purbaya.ac.id</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 BEM Politeknik Purbaya. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
