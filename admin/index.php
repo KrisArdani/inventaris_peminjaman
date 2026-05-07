@@ -1,49 +1,166 @@
 <?php
 session_start();
-
-// Cek apakah user sudah login dan rolenya admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
     exit;
 }
+$nama = htmlspecialchars($_SESSION['nama_lengkap']);
+$initials = '';
+foreach (explode(' ', $_SESSION['nama_lengkap']) as $w) $initials .= mb_substr($w, 0, 1);
+$initials = mb_strtoupper(mb_substr($initials, 0, 2));
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Inventaris</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        body { padding-top: 100px; }
-        .dashboard-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .card { background: white; padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); margin-top: 2rem; }
-    </style>
+    <title>Dashboard Admin — Inventaris BEM</title>
+    <meta name="description" content="Dashboard admin sistem inventaris dan peminjaman barang BEM Politeknik Purbaya">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <nav class="navbar scrolled">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <div class="logo-circle"><i class="fa-solid fa-user-gear"></i></div>
-                <span>Panel Admin</span>
-            </div>
-            <div class="nav-links">
-                <a href="#" class="nav-link active">Dashboard</a>
-                <a href="../logout.php" class="nav-link btn-contact"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+<!-- Sidebar Overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <span>Inventaris BEM</span>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Menu Utama</div>
+        <a href="index.php" class="sidebar-link active">
+            <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </a>
+        <a href="barang.php" class="sidebar-link">
+            <i class="fa-solid fa-box-archive"></i> Manajemen Barang
+        </a>
+        <a href="peminjaman.php" class="sidebar-link">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i> Peminjaman
+        </a>
+        <a href="pengembalian.php" class="sidebar-link">
+            <i class="fa-solid fa-rotate-left"></i> Pengembalian
+        </a>
+
+        <div class="sidebar-section-label">Pengaturan</div>
+        <a href="#" class="sidebar-link">
+            <i class="fa-solid fa-users"></i> Kelola User
+        </a>
+        <a href="#" class="sidebar-link">
+            <i class="fa-solid fa-chart-pie"></i> Laporan
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="sidebar-avatar"><?= $initials ?></div>
+        <div class="sidebar-user-info">
+            <div class="sidebar-user-name"><?= $nama ?></div>
+            <div class="sidebar-user-role">Administrator</div>
+        </div>
+        <a href="../logout.php" class="btn-ghost" title="Logout" style="color:rgba(255,255,255,.5)">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+    </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div class="main-content">
+    <header class="top-header">
+        <div class="top-header-left">
+            <button class="btn-sidebar-toggle" id="btnToggleSidebar"><i class="fa-solid fa-bars"></i></button>
+            <div class="breadcrumb">
+                <span class="current">Dashboard</span>
             </div>
         </div>
-    </nav>
+        <div class="top-header-right">
+            <button class="header-icon-btn" title="Notifikasi">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notif-dot"></span>
+            </button>
+        </div>
+    </header>
 
-    <div class="dashboard-container">
-        <h1>Selamat Datang, <?= htmlspecialchars($_SESSION['nama_lengkap']); ?>!</h1>
-        <p>Anda login sebagai <strong>Admin</strong>.</p>
-        
-        <div class="card">
-            <h2>Statistik Inventaris</h2>
-            <p>Fitur dashboard admin akan ditambahkan di sini (Kelola Barang, Kelola Peminjaman, Kelola User, dll).</p>
+    <div class="page-container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Selamat Datang, <?= $nama ?>!</h1>
+                <p class="page-subtitle">Pantau ringkasan inventaris dan aktivitas peminjaman.</p>
+            </div>
+        </div>
+
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <div><div class="stat-value" id="statTotal">—</div><div class="stat-label">Total Barang</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fa-solid fa-check-circle"></i></div>
+                <div><div class="stat-value" id="statTersedia">—</div><div class="stat-label">Stok Tersedia</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon amber"><i class="fa-solid fa-hand-holding-hand"></i></div>
+                <div><div class="stat-value" id="statDipinjam">—</div><div class="stat-label">Sedang Dipinjam</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red"><i class="fa-solid fa-circle-xmark"></i></div>
+                <div><div class="stat-value" id="statHabis">—</div><div class="stat-label">Stok Habis</div></div>
+            </div>
+        </div>
+
+        <!-- Quick access cards -->
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;margin-top:1rem">Akses Cepat</h2>
+        <div class="stats-row">
+            <a href="barang.php" class="stat-card" style="cursor:pointer;text-decoration:none">
+                <div class="stat-icon green"><i class="fa-solid fa-box-archive"></i></div>
+                <div><div style="font-weight:600;font-size:.9rem">Manajemen Barang</div><div class="stat-label">Kelola data inventaris</div></div>
+            </a>
+            <a href="#" class="stat-card" style="cursor:pointer;text-decoration:none">
+                <div class="stat-icon blue"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                <div><div style="font-weight:600;font-size:.9rem">Peminjaman</div><div class="stat-label">Kelola peminjaman barang</div></div>
+            </a>
+            <a href="#" class="stat-card" style="cursor:pointer;text-decoration:none">
+                <div class="stat-icon amber"><i class="fa-solid fa-chart-pie"></i></div>
+                <div><div style="font-weight:600;font-size:.9rem">Laporan</div><div class="stat-label">Lihat laporan inventaris</div></div>
+            </a>
         </div>
     </div>
+</div>
+
+<script>
+(function(){
+    // Sidebar toggle
+    const btn = document.getElementById('btnToggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if(btn){
+        btn.addEventListener('click',()=>{sidebar.classList.toggle('open');overlay.classList.toggle('active')});
+        overlay.addEventListener('click',()=>{sidebar.classList.remove('open');overlay.classList.remove('active')});
+    }
+    // Load stats
+    fetch('api_barang.php?action=stats')
+        .then(r=>r.json())
+        .then(d=>{
+            if(d.success){
+                anim(document.getElementById('statTotal'),d.total);
+                anim(document.getElementById('statTersedia'),d.tersedia);
+                anim(document.getElementById('statDipinjam'),d.dipinjam);
+                anim(document.getElementById('statHabis'),d.habis);
+            }
+        });
+    function anim(el,target){
+        const dur=600,start=parseInt(el.textContent)||0,diff=target-start;
+        if(!diff){el.textContent=target;return}
+        const t0=performance.now();
+        function step(now){
+            const p=Math.min((now-t0)/dur,1);
+            el.textContent=Math.round(start+diff*(1-Math.pow(1-p,3)));
+            if(p<1)requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+})();
+</script>
 </body>
 </html>

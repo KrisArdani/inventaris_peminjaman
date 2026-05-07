@@ -1,0 +1,186 @@
+/* ==========================================================================
+   Peminjaman-specific styles (extends admin.css)
+   ========================================================================== */
+
+/* Detail info grid */
+.detail-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+}
+.detail-field {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+}
+.detail-field.full {
+    grid-column: 1 / -1;
+}
+.detail-label {
+    font-size: .7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--outline);
+}
+.detail-value {
+    font-size: .88rem;
+    font-weight: 500;
+    color: var(--on-surface);
+}
+
+/* Detail items table (inside modal) */
+.detail-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .82rem;
+    margin-top: .75rem;
+}
+.detail-items-table th {
+    background: var(--surface-container-low);
+    padding: .5rem .75rem;
+    text-align: left;
+    font-size: .68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--on-surface-variant);
+    border-bottom: 1px solid #e2e8f0;
+}
+.detail-items-table td {
+    padding: .5rem .75rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+.detail-items-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Detail section divider */
+.detail-divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 1rem 0;
+}
+.detail-section-title {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--on-surface);
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+.detail-section-title i {
+    color: var(--primary);
+    font-size: .75rem;
+}
+
+/* Status badge large */
+.status-badge-lg {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .3rem .85rem;
+    border-radius: var(--radius-full);
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+/* Rejection reason box */
+.rejection-box {
+    background: rgba(239, 68, 68, .06);
+    border: 1px solid rgba(239, 68, 68, .15);
+    border-radius: var(--radius);
+    padding: .75rem 1rem;
+    font-size: .82rem;
+    color: #b91c1c;
+    margin-top: .5rem;
+}
+.rejection-box i {
+    margin-right: .35rem;
+}
+
+/* Item row in create form */
+.item-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 32px;
+    gap: .5rem;
+    align-items: end;
+    margin-bottom: .5rem;
+    animation: fadeIn .25s ease;
+}
+.item-row .form-group {
+    margin: 0;
+}
+.item-row .btn-remove-item {
+    width: 32px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    color: var(--error);
+    background: rgba(239,68,68,.08);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 0;
+}
+.item-row .btn-remove-item:hover {
+    background: rgba(239,68,68,.18);
+}
+
+/* Barang truncation in table */
+.barang-list-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: .82rem;
+    color: var(--on-surface-variant);
+}
+
+/* Peminjam cell with avatar */
+.peminjam-cell {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+.peminjam-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--surface-container-high);
+    color: var(--primary);
+    display: grid;
+    place-items: center;
+    font-size: .65rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.peminjam-name {
+    font-weight: 600;
+    font-size: .85rem;
+    color: var(--on-surface);
+    line-height: 1.2;
+}
+.peminjam-username {
+    font-size: .72rem;
+    color: var(--outline);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .detail-info {
+        grid-template-columns: 1fr;
+    }
+    .item-row {
+        grid-template-columns: 1fr 70px 32px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
