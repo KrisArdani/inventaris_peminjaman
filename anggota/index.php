@@ -400,7 +400,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
         <div class="nav-container">
             <div class="nav-logo">
                 <div class="logo-circle" style="background-color: var(--primary);"><i class="fa-solid fa-user"></i></div>
-                <span>Panel Anggota</span>
+                <span><?= htmlspecialchars($_SESSION['nama_lengkap']); ?></span>
             </div>
             <div class="nav-links">
                 <a href="index.php" class="nav-link active">Dashboard</a>
@@ -463,7 +463,14 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
         <div class="card">
             <div class="card-header">
                 <h2><i class="fa-solid fa-clock-rotate-left" style="color: var(--primary);"></i> Riwayat Peminjaman</h2>
-                <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="loadRiwayat()"><i class="fa-solid fa-rotate-right"></i> Segarkan</button>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <select id="filterKembali" class="btn btn-outline" style="padding: 0.4rem 0.75rem; font-size: 0.85rem; border-radius: 8px; cursor: pointer; background: #f8fafc; border-color: #e2e8f0;">
+                        <option value="all">Semua Status Kembali</option>
+                        <option value="dikembalikan">Sudah Dikembalikan</option>
+                        <option value="belum">Belum Dikembalikan</option>
+                    </select>
+                    <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="loadRiwayat()"><i class="fa-solid fa-rotate-right"></i> Segarkan</button>
+                </div>
             </div>
             
             <div class="table-responsive">
@@ -550,9 +557,23 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
 
         function getStatusBadge(status) {
             if (status === 'pending') return '<span class="status-badge status-pending"><i class="fa-solid fa-clock"></i> Pending</span>';
-            if (status === 'disetujui') return '<span class="status-badge status-disetujui"><i class="fa-solid fa-check-circle"></i> Disetujui</span>';
-            if (status === 'ditolak') return '<span class="status-badge status-ditolak"><i class="fa-solid fa-circle-xmark"></i> Ditolak</span>';
-            return status;
+            if (status === 'disetujui') return '<span class="status-badge status-disetujui"><i class="fa-solid fa-check"></i> Disetujui</span>';
+            if (status === 'ditolak') return '<span class="status-badge status-ditolak"><i class="fa-solid fa-xmark"></i> Ditolak</span>';
+            return `<span class="status-badge">${status}</span>`;
+        }
+
+        function getReturnStatusBadge(p) {
+            if (p.status_approval !== 'disetujui') return '';
+            
+            const total = parseInt(p.jumlah_item) || 0;
+            const kembali = parseInt(p.jumlah_dikembalikan) || 0;
+
+            if (total === 0) return '';
+            if (kembali === total) {
+                return '<span class="status-badge" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;"><i class="fa-solid fa-box-archive"></i> Dikembalikan</span>';
+            } else {
+                return '<span class="status-badge" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;"><i class="fa-solid fa-box-open"></i> Belum Dikembalikan</span>';
+            }
         }
 
         async function loadStats() {
@@ -590,6 +611,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             }, stepTime);
         }
 
+        let riwayatData = [];
+
         async function loadRiwayat() {
             const tbody = document.getElementById('riwayatBody');
             tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem;"><i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i><br>Memuat data...</td></tr>`;
@@ -599,48 +622,70 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                 const data = await res.json();
                 
                 if (data.success) {
-                    if (data.data.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 4rem; color: #64748b;">
-                            <i class="fa-solid fa-folder-open fa-3x" style="margin-bottom: 1rem; color: #cbd5e1;"></i><br>
-                            Anda belum memiliki riwayat peminjaman.
-                        </td></tr>`;
-                        return;
-                    }
-
-                    tbody.innerHTML = data.data.map(p => {
-                        const dateObj = new Date(p.tgl_pengajuan);
-                        const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-                        const timeStr = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-
-                        return `
-                        <tr>
-                            <td><strong style="font-family: monospace; color: var(--primary-dark);">${p.id_peminjaman}</strong></td>
-                            <td>
-                                <div class="item-list">
-                                    <span class="item-name">${dateStr}</span>
-                                    <span class="item-meta">${timeStr}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="item-list">
-                                    <span class="item-name" style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.daftar_barang}">${p.daftar_barang}</span>
-                                    <span class="item-meta">${p.jumlah_item} jenis barang</span>
-                                </div>
-                            </td>
-                            <td>${getStatusBadge(p.status_approval)}</td>
-                            <td style="text-align: right;">
-                                <button class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.85rem;" onclick="viewDetail('${p.id_peminjaman}')">
-                                    Lihat Detail
-                                </button>
-                            </td>
-                        </tr>
-                    `}).join('');
+                    riwayatData = data.data;
+                    renderRiwayat();
                 }
             } catch (err) {
                 console.error(err);
                 tbody.innerHTML = `<tr><td colspan="5" style="color: #ef4444; text-align: center; padding: 2rem;">Gagal memuat data. Periksa koneksi Anda.</td></tr>`;
             }
         }
+
+        function renderRiwayat() {
+            const tbody = document.getElementById('riwayatBody');
+            const filterValue = document.getElementById('filterKembali').value;
+            
+            let filtered = riwayatData;
+            if (filterValue === 'dikembalikan') {
+                filtered = riwayatData.filter(p => p.status_approval === 'disetujui' && parseInt(p.jumlah_dikembalikan) === parseInt(p.jumlah_item));
+            } else if (filterValue === 'belum') {
+                filtered = riwayatData.filter(p => p.status_approval === 'disetujui' && parseInt(p.jumlah_dikembalikan) < parseInt(p.jumlah_item));
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 4rem; color: #64748b;">
+                    <i class="fa-solid fa-folder-open fa-3x" style="margin-bottom: 1rem; color: #cbd5e1;"></i><br>
+                    ${riwayatData.length === 0 ? 'Anda belum memiliki riwayat peminjaman.' : 'Data tidak ditemukan untuk filter ini.'}
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(p => {
+                const dateObj = new Date(p.tgl_pengajuan);
+                const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                const timeStr = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+                return `
+                <tr>
+                    <td><strong style="font-family: monospace; color: var(--primary-dark);">${p.id_peminjaman}</strong></td>
+                    <td>
+                        <div class="item-list">
+                            <span class="item-name">${dateStr}</span>
+                            <span class="item-meta">${timeStr}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="item-list">
+                            <span class="item-name" style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.daftar_barang}">${p.daftar_barang}</span>
+                            <span class="item-meta">${p.jumlah_item} jenis barang</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            ${getStatusBadge(p.status_approval)}
+                            ${getReturnStatusBadge(p)}
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.85rem;" onclick="viewDetail('${p.id_peminjaman}')">
+                            Lihat Detail
+                        </button>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        document.getElementById('filterKembali').addEventListener('change', renderRiwayat);
 
         async function viewDetail(id) {
             try {
@@ -654,7 +699,12 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                     const dateObj = new Date(p.tgl_pengajuan);
                     document.getElementById('detTglPengajuan').innerHTML = `${dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })} <span style="color:#64748b; font-weight:normal;">pukul ${dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>`;
                     
-                    document.getElementById('detStatusApproval').innerHTML = getStatusBadge(p.status_approval);
+                    document.getElementById('detStatusApproval').innerHTML = `
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.25rem;">
+                            ${getStatusBadge(p.status_approval)}
+                            ${getReturnStatusBadge(p)}
+                        </div>
+                    `;
                     document.getElementById('detKegiatan').textContent = p.nama_kegiatan || '-';
                     document.getElementById('detTujuan').textContent = p.tujuan || '-';
                     document.getElementById('detLokasi').textContent = p.lokasi || '-';

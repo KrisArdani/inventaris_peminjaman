@@ -119,6 +119,7 @@ try {
             $id_user = $_SESSION['user_id'];
             $sql = "SELECT p.*, 
                         (SELECT COUNT(*) FROM peminjaman_detail d WHERE d.id_peminjaman = p.id_peminjaman) AS jumlah_item,
+                        (SELECT COUNT(*) FROM peminjaman_detail d WHERE d.id_peminjaman = p.id_peminjaman AND d.status_item = 'dikembalikan') AS jumlah_dikembalikan,
                         (SELECT GROUP_CONCAT(b.nama_barang SEPARATOR ', ')
                          FROM peminjaman_detail d
                          JOIN barang b ON d.id_barang = b.id_barang
@@ -138,9 +139,14 @@ try {
             $id_peminjaman = $_GET['id'] ?? '';
             
             // Verifikasi milik user sendiri
-            $cek = $koneksi->prepare("SELECT id_peminjaman, status_approval, tgl_pengajuan, alasan_tolak FROM peminjaman WHERE id_peminjaman = ? AND id_user = ?");
+            $cek = $koneksi->prepare("SELECT p.*, 
+                                        (SELECT nama_lengkap FROM users u WHERE u.id_user = p.id_admin) AS admin_nama,
+                                        (SELECT COUNT(*) FROM peminjaman_detail d WHERE d.id_peminjaman = p.id_peminjaman) AS jumlah_item,
+                                        (SELECT COUNT(*) FROM peminjaman_detail d WHERE d.id_peminjaman = p.id_peminjaman AND d.status_item = 'dikembalikan') AS jumlah_dikembalikan
+                                      FROM peminjaman p 
+                                      WHERE p.id_peminjaman = ? AND p.id_user = ?");
             $cek->execute([$id_peminjaman, $id_user]);
-            $peminjaman = $cek->fetch();
+            $peminjaman = $cek->fetch(PDO::FETCH_ASSOC);
             
             if (!$peminjaman) {
                 throw new Exception('Data peminjaman tidak ditemukan');

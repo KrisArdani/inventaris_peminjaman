@@ -46,10 +46,10 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
         </a>
 
         <div class="sidebar-section-label">Pengaturan</div>
-        <a href="#" class="sidebar-link">
+        <a href="user.php" class="sidebar-link">
             <i class="fa-solid fa-users"></i> Kelola User
         </a>
-        <a href="#" class="sidebar-link">
+        <a href="laporan.php" class="sidebar-link">
             <i class="fa-solid fa-chart-pie"></i> Laporan
         </a>
     </nav>
@@ -156,6 +156,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                 <table class="data-table" id="barangTable">
                     <thead>
                         <tr>
+                            <th>Foto</th>
                             <th>Kode</th>
                             <th>Nama Barang</th>
                             <th>Kategori</th>
@@ -191,8 +192,8 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="form-group" id="grpIdBarang">
-                        <label class="form-label">Kode Barang <span style="color:var(--error)">*</span></label>
-                        <input type="text" class="form-input" id="inpIdBarang" placeholder="BRG-011">
+                        <label class="form-label">Kode Barang</label>
+                        <input type="text" class="form-input" id="inpIdBarang" placeholder="Otomatis saat ditambah" readonly style="background-color: var(--surface-container-high);">
                         <span class="form-error" id="errIdBarang">Kode barang wajib diisi</span>
                     </div>
                     <div class="form-group" id="grpNamaBarang">
@@ -212,6 +213,11 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                     <div class="form-group" id="grpLokasi">
                         <label class="form-label">Lokasi</label>
                         <input type="text" class="form-input" id="inpLokasi" placeholder="Ruang Sekretariat">
+                    </div>
+                    <div class="form-group full" id="grpFotoBarang">
+                        <label class="form-label">Foto Barang</label>
+                        <input type="file" class="form-input" id="inpFotoBarang" accept="image/*">
+                        <span style="font-size:0.75rem;color:var(--outline);display:block;margin-top:0.25rem;">Format disarankan: JPG, PNG.</span>
                     </div>
                     <div class="form-group" id="grpStokTotal">
                         <label class="form-label">Stok Total <span style="color:var(--error)">*</span></label>

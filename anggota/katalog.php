@@ -577,7 +577,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
         <div class="nav-container">
             <div class="nav-logo">
                 <div class="logo-circle" style="background-color: var(--primary);"><i class="fa-solid fa-user"></i></div>
-                <span>Panel Anggota</span>
+                <span><?= htmlspecialchars($_SESSION['nama_lengkap']); ?></span>
             </div>
             <div class="nav-links">
                 <a href="index.php" class="nav-link">Dashboard</a>

@@ -46,10 +46,10 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
         </a>
 
         <div class="sidebar-section-label">Pengaturan</div>
-        <a href="#" class="sidebar-link">
+        <a href="user.php" class="sidebar-link">
             <i class="fa-solid fa-users"></i> Kelola User
         </a>
-        <a href="#" class="sidebar-link">
+        <a href="laporan.php" class="sidebar-link">
             <i class="fa-solid fa-chart-pie"></i> Laporan
         </a>
     </nav>

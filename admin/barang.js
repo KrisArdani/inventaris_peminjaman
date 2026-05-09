@@ -38,6 +38,7 @@
         lokasi:        $('#inpLokasi'),
         stok_total:    $('#inpStokTotal'),
         stok_tersedia: $('#inpStokTersedia'),
+        foto_barang:   $('#inpFotoBarang'),
     };
 
     // ===== Init =====
@@ -93,11 +94,16 @@
     async function apiPost(action, body) {
         const url = new URL(API, window.location.href);
         url.searchParams.set('action', action);
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-        });
+        const options = { method: 'POST' };
+        
+        if (body instanceof FormData) {
+            options.body = body;
+        } else {
+            options.headers = { 'Content-Type': 'application/json' };
+            options.body = JSON.stringify(body);
+        }
+        
+        const res = await fetch(url, options);
         return res.json();
     }
 
@@ -162,8 +168,14 @@
 
             tableBody.innerHTML = data.data.map((b, i) => {
                 const statusBadge = getStatusBadge(b.stok_tersedia, b.stok_total);
+                const imgSrc = b.gambar ? b.gambar : 'https://via.placeholder.com/40?text=No+Img';
                 return `
                 <tr style="animation: fadeIn .3s ease ${i * .04}s both">
+                    <td>
+                        <div style="width:40px;height:40px;border-radius:var(--radius-sm);overflow:hidden;background:var(--surface-container-high);">
+                            <img src="${imgSrc}" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='https://via.placeholder.com/40?text=No+Img'">
+                        </div>
+                    </td>
                     <td><span class="cell-id">${esc(b.id_barang)}</span></td>
                     <td><span class="cell-name">${esc(b.nama_barang)}</span></td>
                     <td><span class="badge badge-blue">${esc(b.kategori)}</span></td>
@@ -226,23 +238,26 @@
 
         if (data) {
             fields.id_barang.value = data.id_barang;
-            fields.id_barang.readOnly = true;
-            fields.id_barang.style.opacity = '.6';
             fields.nama_barang.value = data.nama_barang;
             fields.kategori.value = data.kategori;
             fields.lokasi.value = data.lokasi || '';
             fields.stok_total.value = data.stok_total;
             fields.stok_tersedia.value = data.stok_tersedia;
+            fields.foto_barang.value = ''; // clear file input on edit
         } else {
             formBarang.reset();
-            fields.id_barang.readOnly = false;
-            fields.id_barang.style.opacity = '1';
+            fields.id_barang.value = ''; // Pastikan kosong saat tambah
             fields.stok_total.value = 0;
             fields.stok_tersedia.value = 0;
+            fields.foto_barang.value = '';
         }
 
+        // Kode barang selalu readonly karena auto-increment (create) atau PK (edit)
+        fields.id_barang.readOnly = true;
+        fields.id_barang.style.opacity = '.6';
+
         modalBarang.classList.add('active');
-        setTimeout(() => (data ? fields.nama_barang : fields.id_barang).focus(), 200);
+        setTimeout(() => fields.nama_barang.focus(), 200);
     }
 
     function closeFormModal() {
@@ -259,18 +274,23 @@
         clearFormErrors();
         let valid = true;
 
-        const body = {};
+        const body = new FormData();
         for (const [k, el] of Object.entries(fields)) {
-            body[k] = el.value.trim();
+            if (k === 'foto_barang') {
+                if (el.files.length > 0) body.append('gambar', el.files[0]);
+            } else {
+                body.append(k, el.value.trim());
+            }
         }
-        body.stok_total = parseInt(body.stok_total) || 0;
-        body.stok_tersedia = parseInt(body.stok_tersedia) || 0;
+        
+        const stokTotal = parseInt(fields.stok_total.value) || 0;
+        const stokTersedia = parseInt(fields.stok_tersedia.value) || 0;
 
-        if (!body.id_barang) { setError('grpIdBarang'); valid = false; }
-        if (!body.nama_barang) { setError('grpNamaBarang'); valid = false; }
-        if (!body.kategori) { setError('grpKategori'); valid = false; }
-        if (body.stok_total < 0) { setError('grpStokTotal'); valid = false; }
-        if (body.stok_tersedia > body.stok_total) { setError('grpStokTersedia'); valid = false; }
+        // id_barang tidak perlu divalidasi di frontend karena readonly & auto-generated
+        if (!fields.nama_barang.value.trim()) { setError('grpNamaBarang'); valid = false; }
+        if (!fields.kategori.value.trim()) { setError('grpKategori'); valid = false; }
+        if (stokTotal < 0) { setError('grpStokTotal'); valid = false; }
+        if (stokTersedia > stokTotal) { setError('grpStokTersedia'); valid = false; }
 
         if (!valid) return;
 

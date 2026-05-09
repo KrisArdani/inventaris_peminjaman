@@ -11,6 +11,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 require '../koneksi.php';
 
+// Pastikan folder assets/images/barang ada
+if (!is_dir('../assets/images/barang')) {
+    mkdir('../assets/images/barang', 0777, true);
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 
@@ -80,45 +85,76 @@ try {
         case 'create':
             if ($method !== 'POST') throw new Exception('Method not allowed');
 
-            $data = json_decode(file_get_contents('php://input'), true);
-            $id   = $data['id_barang'] ?? '';
-            $nama = $data['nama_barang'] ?? '';
-            $kat  = $data['kategori'] ?? '';
-            $stok = intval($data['stok_total'] ?? 0);
-            $ters = intval($data['stok_tersedia'] ?? 0);
-            $lok  = $data['lokasi'] ?? '';
+            $nama = $_POST['nama_barang'] ?? '';
+            $kat  = $_POST['kategori'] ?? '';
+            $stok = intval($_POST['stok_total'] ?? 0);
+            $ters = intval($_POST['stok_tersedia'] ?? 0);
+            $lok  = $_POST['lokasi'] ?? '';
 
-            if (!$id || !$nama || !$kat) throw new Exception('Data tidak lengkap');
+            if (!$nama || !$kat) throw new Exception('Data tidak lengkap');
             if ($ters > $stok) throw new Exception('Stok tersedia tidak boleh melebihi stok total');
 
-            // Check duplicate
+            // Generate ID otomatis
+            $stmtLast = $koneksi->query("SELECT id_barang FROM barang ORDER BY id_barang DESC LIMIT 1");
+            $lastId = $stmtLast->fetchColumn();
+            if ($lastId) {
+                // Asumsi format 'BRG-001'
+                $num = intval(substr($lastId, 4)) + 1;
+                $id = 'BRG-' . str_pad($num, 3, '0', STR_PAD_LEFT);
+            } else {
+                $id = 'BRG-001';
+            }
+
+            // Cek duplikasi ID (seharusnya aman karena auto-generated, tapi jaga-jaga)
             $chk = $koneksi->prepare("SELECT COUNT(*) FROM barang WHERE id_barang = ?");
             $chk->execute([$id]);
-            if ($chk->fetchColumn() > 0) throw new Exception('Kode barang sudah digunakan');
+            if ($chk->fetchColumn() > 0) throw new Exception('Kode barang sudah digunakan, coba lagi.');
 
-            $stmt = $koneksi->prepare("INSERT INTO barang (id_barang, nama_barang, kategori, stok_total, stok_tersedia, lokasi) VALUES (?,?,?,?,?,?)");
-            $stmt->execute([$id, $nama, $kat, $stok, $ters, $lok]);
+            $foto = null;
+            if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES['gambar']['name'], PATHINFO_EXTENSION);
+                $filename = $id . '_' . time() . '.' . $ext;
+                $fotoPath = '../assets/images/barang/' . $filename;
+                move_uploaded_file($_FILES['gambar']['tmp_name'], $fotoPath);
+                $foto = $fotoPath;
+            }
 
-            echo json_encode(['success' => true, 'message' => 'Barang berhasil ditambahkan']);
+            $stmt = $koneksi->prepare("INSERT INTO barang (id_barang, nama_barang, kategori, stok_total, stok_tersedia, lokasi, gambar) VALUES (?,?,?,?,?,?,?)");
+            $stmt->execute([$id, $nama, $kat, $stok, $ters, $lok, $foto]);
+
+            echo json_encode(['success' => true, 'message' => 'Barang berhasil ditambahkan', 'id_barang' => $id]);
             break;
 
         // ---- UPDATE ----
         case 'update':
             if ($method !== 'POST') throw new Exception('Method not allowed');
 
-            $data = json_decode(file_get_contents('php://input'), true);
-            $id   = $data['id_barang'] ?? '';
-            $nama = $data['nama_barang'] ?? '';
-            $kat  = $data['kategori'] ?? '';
-            $stok = intval($data['stok_total'] ?? 0);
-            $ters = intval($data['stok_tersedia'] ?? 0);
-            $lok  = $data['lokasi'] ?? '';
+            $id   = $_POST['id_barang'] ?? '';
+            $nama = $_POST['nama_barang'] ?? '';
+            $kat  = $_POST['kategori'] ?? '';
+            $stok = intval($_POST['stok_total'] ?? 0);
+            $ters = intval($_POST['stok_tersedia'] ?? 0);
+            $lok  = $_POST['lokasi'] ?? '';
 
             if (!$id || !$nama || !$kat) throw new Exception('Data tidak lengkap');
             if ($ters > $stok) throw new Exception('Stok tersedia tidak boleh melebihi stok total');
 
-            $stmt = $koneksi->prepare("UPDATE barang SET nama_barang=?, kategori=?, stok_total=?, stok_tersedia=?, lokasi=? WHERE id_barang=?");
-            $stmt->execute([$nama, $kat, $stok, $ters, $lok, $id]);
+            $fotoQuery = "";
+            $params = [$nama, $kat, $stok, $ters, $lok];
+
+            if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES['gambar']['name'], PATHINFO_EXTENSION);
+                $filename = $id . '_' . time() . '.' . $ext;
+                $fotoPath = '../assets/images/barang/' . $filename;
+                move_uploaded_file($_FILES['gambar']['tmp_name'], $fotoPath);
+                $fotoQuery = ", gambar=?";
+                $params[] = $fotoPath;
+            }
+
+            $params[] = $id;
+
+            $stmt = $koneksi->prepare("UPDATE barang SET nama_barang=?, kategori=?, stok_total=?, stok_tersedia=?, lokasi=? $fotoQuery WHERE id_barang=?");
+            $stmt->execute($params);
 
             echo json_encode(['success' => true, 'message' => 'Barang berhasil diperbarui']);
             break;
