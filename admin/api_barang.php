@@ -3,11 +3,12 @@ session_start();
 header('Content-Type: application/json');
 
 // Auth check
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'kepala'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
+$role = $_SESSION['role'];
 
 require '../koneksi.php';
 
@@ -83,6 +84,7 @@ try {
 
         // ---- CREATE ----
         case 'create':
+            if ($role !== 'admin') throw new Exception('Akses ditolak');
             if ($method !== 'POST') throw new Exception('Method not allowed');
 
             $nama = $_POST['nama_barang'] ?? '';
@@ -127,6 +129,7 @@ try {
 
         // ---- UPDATE ----
         case 'update':
+            if ($role !== 'admin') throw new Exception('Akses ditolak');
             if ($method !== 'POST') throw new Exception('Method not allowed');
 
             $id   = $_POST['id_barang'] ?? '';
@@ -161,6 +164,7 @@ try {
 
         // ---- DELETE ----
         case 'delete':
+            if ($role !== 'admin') throw new Exception('Akses ditolak');
             if ($method !== 'POST') throw new Exception('Method not allowed');
 
             $data = json_decode(file_get_contents('php://input'), true);
