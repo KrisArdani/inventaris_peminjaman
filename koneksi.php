@@ -1,8 +1,8 @@
 <?php
-$host = "localhost";
+$host = "localhost:3307";
 $user = "root";
 $pass = "";
-$db   = "inventaris_peminjaman";
+$db   = "inventaris_peminjaman_1";
 
 try {
     // Create a new PDO instance
