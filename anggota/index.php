@@ -399,8 +399,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
     <nav class="navbar scrolled">
         <div class="nav-container">
             <div class="nav-logo">
-                <div class="logo-circle" style="background-color: var(--primary);"><i class="fa-solid fa-user"></i></div>
-                <span><?= htmlspecialchars($_SESSION['nama_lengkap']); ?></span>
+                <div class="logo-circle logo-circle--img" style="width:40px;height:40px;">
+                    <img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya" class="nav-logo-img">
+                </div>
+                <span>BEM Purbaya</span>
             </div>
             <div class="nav-links">
                 <a href="index.php" class="nav-link active">Dashboard</a>

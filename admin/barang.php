@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
@@ -27,7 +27,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
 <!-- ===== SIDEBAR ===== -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-        <div class="sidebar-brand-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div class="sidebar-brand-icon sidebar-brand-icon--img"><img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya"></div>
         <span>Inventaris BEM</span>
     </div>
     <nav class="sidebar-nav">

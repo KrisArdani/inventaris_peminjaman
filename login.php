@@ -232,8 +232,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="login-logo">
-                    <i class="fa-solid fa-boxes-stacked"></i>
+                <div class="login-logo" style="background-color: transparent; padding: 0; overflow: hidden;">
+                    <img src="assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;">
                 </div>
                 <h2>Sistem Inventaris</h2>
                 <p>Silakan login untuk mengakses layanan peminjaman barang BEM Politeknik Purbaya.</p>

@@ -196,6 +196,22 @@ img {
     font-size: 1.25rem;
 }
 
+/* Logo image variant */
+.logo-circle--img {
+    background-color: transparent;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.nav-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
 .nav-links {
     display: flex;
     align-items: center;
