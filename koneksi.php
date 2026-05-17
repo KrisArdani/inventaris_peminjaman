@@ -1,8 +1,8 @@
 <?php
-$host = "localhost:3307";
+$host = "localhost:3306";
 $user = "root";
 $pass = "";
-$db   = "inventaris_peminjaman_1";
+$db   = "inventaris_peminjaman";
 
 try {
     // Create a new PDO instance
@@ -11,7 +11,6 @@ try {
     $koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Set default fetch mode to associative array
     $koneksi->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     die("Koneksi database gagal: " . $e->getMessage());
 }
-?>
