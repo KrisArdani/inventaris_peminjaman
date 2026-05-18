@@ -11,7 +11,7 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
     <!-- Navbar -->
@@ -149,51 +149,51 @@
 
             <div class="dept-grid">
                 <!-- BPH -->
-                <div class="dept-card reveal">
+                <div class="dept-card reveal" data-dept="bph">
                     <div class="dept-icon"><i class="fa-solid fa-users-gear"></i></div>
                     <h3>BPH</h3>
                     <p>Badan Pengurus Harian yang mengkoordinasikan seluruh aktivitas dan administrasi BEM.</p>
-                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                    <a href="javascript:void(0)" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
                 </div>
                 
                 <!-- Dalam Negeri -->
-                <div class="dept-card reveal delay-1">
+                <div class="dept-card reveal delay-1" data-dept="dalam_negeri">
                     <div class="dept-icon"><i class="fa-solid fa-building-columns"></i></div>
                     <h3>Departemen Dalam Negeri</h3>
                     <p>Fokus pada kesejahteraan, aspirasi, dan harmonisasi internal mahasiswa kampus.</p>
-                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                    <a href="javascript:void(0)" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
                 </div>
 
                 <!-- Luar Negeri -->
-                <div class="dept-card reveal delay-2">
+                <div class="dept-card reveal delay-2" data-dept="luar_negeri">
                     <div class="dept-icon"><i class="fa-solid fa-globe"></i></div>
                     <h3>Departemen Luar Negeri</h3>
                     <p>Membangun relasi dan kerja sama dengan instansi, kampus lain, serta pihak eksternal.</p>
-                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                    <a href="javascript:void(0)" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
                 </div>
 
                 <!-- Kominfo -->
-                <div class="dept-card reveal">
+                <div class="dept-card reveal" data-dept="kominfo">
                     <div class="dept-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
                     <h3>Departemen Kominfo</h3>
                     <p>Mengelola informasi, media sosial, publikasi, dan desain visual organisasi.</p>
-                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                    <a href="javascript:void(0)" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
                 </div>
 
                 <!-- Adkesma -->
-                <div class="dept-card reveal delay-1">
+                <div class="dept-card reveal delay-1" data-dept="adkesma">
                     <div class="dept-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
                     <h3>Departemen Adkesma</h3>
                     <p>Advokasi dan Kesejahteraan Mahasiswa untuk memastikan hak-hak mahasiswa terpenuhi.</p>
-                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                    <a href="javascript:void(0)" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
                 </div>
 
                 <!-- PSDM -->
-                <div class="dept-card reveal delay-2">
+                <div class="dept-card reveal delay-2" data-dept="psdm">
                     <div class="dept-icon"><i class="fa-solid fa-user-graduate"></i></div>
                     <h3>Departemen PSDM</h3>
                     <p>Pengembangan Sumber Daya Mahasiswa melalui pelatihan dan kaderisasi kepemimpinan.</p>
-                    <a href="#" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
+                    <a href="javascript:void(0)" class="dept-link">Selengkapnya <i class="fa-solid fa-angle-right"></i></a>
                 </div>
             </div>
         </div>
@@ -256,7 +256,24 @@
         </div>
     </footer>
 
+    <!-- Modal Anggota Departemen -->
+    <div id="deptModal" class="dept-modal">
+        <div class="dept-modal-overlay"></div>
+        <div class="dept-modal-content">
+            <div class="dept-modal-header">
+                <h3 id="modalDeptTitle">Nama Departemen</h3>
+                <button class="dept-modal-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="dept-modal-body">
+                <p id="modalDeptDesc" class="modal-desc">Deskripsi departemen</p>
+                <div id="modalMemberGrid" class="dept-member-grid">
+                    <!-- Cards anggota akan di-generate via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom Scripts -->
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>
