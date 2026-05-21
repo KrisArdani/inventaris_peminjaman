@@ -11,7 +11,7 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
     <!-- Navbar -->
@@ -273,7 +273,34 @@
         </div>
     </div>
 
+    <!-- Chatbot Widget -->
+    <div id="chatbot-toggle" title="Asisten BEM">
+        <i class="fa-solid fa-robot"></i>
+    </div>
+
+    <div id="chatbot-window">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fa-solid fa-robot"></i> Asisten BEM
+            </div>
+            <button id="chatbot-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="chatbot-messages">
+            <div class="chatbot-quick-questions">
+                <span class="chatbot-chip">Cara pinjam barang</span>
+                <span class="chatbot-chip">Syarat peminjaman</span>
+                <span class="chatbot-chip">Denda terlambat</span>
+            </div>
+            <!-- Messages will be injected here by JS -->
+        </div>
+        <div class="chatbot-input-area">
+            <input type="text" id="chatbot-input" placeholder="Tanya sesuatu..." autocomplete="off">
+            <button id="chatbot-send"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <!-- Custom Scripts -->
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
+    <script src="chatbot.js?v=3"></script>
 </body>
 </html>
