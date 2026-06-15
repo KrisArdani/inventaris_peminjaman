@@ -26,99 +26,12 @@ function initChatbot() {
         "min", "kak", "bang", "mas", "mbak", "pak", "bu", "buat", "sih"
     ];
 
-    // Data FAQ + Keywords (untuk menangani sinonim dan kata bahasa sehari-hari)
-    const FAQ_DATA = [
-        {
-            topic: "Cara meminjam barang",
-            question: "Bagaimana prosedur atau cara meminjam barang inventaris?",
-            keywords: "gimana minjem pinjem pinjam ambil barang alat",
-            answer: "Untuk meminjam barang, Anda harus login terlebih dahulu melalui menu Sistem Peminjaman, pilih barang yang tersedia di katalog, lalu isi formulir peminjaman dengan tanggal ambil dan tanggal kembali."
-        },
-        {
-            topic: "Syarat peminjaman",
-            question: "Apa saja persyaratan atau syarat untuk meminjam?",
-            keywords: "butuh apa aja syarat ktm ktp mahasiswa anggota",
-            answer: "Syarat utama adalah Anda harus terdaftar sebagai Anggota BEM atau Mahasiswa aktif Politeknik Purbaya, serta tidak memiliki tanggungan peminjaman barang yang belum dikembalikan."
-        },
-        {
-            topic: "Durasi peminjaman",
-            question: "Berapa lama batas waktu maksimal durasi peminjaman barang?",
-            keywords: "berapa hari lama waktu batas maks pinjem",
-            answer: "Batas maksimal peminjaman adalah 3 hari kerja. Jika membutuhkan waktu lebih lama, silakan hubungi admin untuk melakukan perpanjangan."
-        },
-        {
-            topic: "Denda keterlambatan",
-            question: "Apakah ada denda sanksi jika terlambat mengembalikan barang?",
-            keywords: "telat denda sanksi bayar hukum lewat batas",
-            answer: "Ya, keterlambatan pengembalian akan dikenakan sanksi berupa denda administrasi atau pengurangan hak pinjam pada periode berikutnya. Harap kembalikan tepat waktu."
-        },
-        {
-            topic: "Barang yang tersedia",
-            question: "Barang alat inventaris apa saja yang bisa dipinjam tersedia?",
-            keywords: "ada barang apa aja daftar list laptop proyektor kamera",
-            answer: "Kami menyediakan berbagai inventaris seperti Laptop, Proyektor, Kamera, Sound System (Speaker), Tenda, Kursi, Meja Lipat, dan perlengkapan acara lainnya. Anda bisa melihat daftar lengkapnya di Katalog."
-        },
-        {
-            topic: "Cara registrasi akun",
-            question: "Bagaimana cara mendaftar registrasi buat akun baru?",
-            keywords: "bikin akun daftar register pendaftaran belum punya akun",
-            answer: "Silakan klik menu Sistem Peminjaman, lalu pilih opsi 'Belum punya akun? Daftar di sini'. Isi data diri lengkap menggunakan NIM yang valid."
-        },
-        {
-            topic: "Status peminjaman",
-            question: "Bagaimana cara cek status peminjaman riwayat saya?",
-            keywords: "cek liat status riwayat disetujui ditolak progres",
-            answer: "Status peminjaman (Menunggu, Disetujui, Ditolak, atau Selesai) dapat dilihat di dashboard akun Anda setelah login, pada menu 'Riwayat Peminjaman'."
-        },
-        {
-            topic: "Pengembalian barang",
-            question: "Bagaimana prosedur cara proses pengembalian barang kembali?",
-            keywords: "balik balikin kembalikan lapor",
-            answer: "Bawa barang yang dipinjam ke Sekretariat BEM. Admin akan mengecek kondisi barang. Jika kondisi baik sesuai saat dipinjam, admin akan mengubah status menjadi Selesai."
-        },
-        {
-            topic: "Jam operasional",
-            question: "Kapan jam operasional waktu buka tutup layanan peminjaman sekretariat?",
-            keywords: "buka jam berapa tutup libur jadwal hari operasional",
-            answer: "Layanan peminjaman dan pengembalian dilayani pada hari kerja (Senin - Jumat) pukul 09:00 hingga 16:00 WIB di Ruang Sekretariat BEM."
-        },
-        {
-            topic: "Kontak admin",
-            question: "Bagaimana cara menghubungi kontak hubungi nomor admin pengurus?",
-            keywords: "nomor wa whatsapp email telepon call center tanya",
-            answer: "Anda dapat menghubungi kami melalui email bem@purbaya.ac.id atau via WhatsApp di nomor +62 812 3456 7890. Anda juga bisa datang langsung ke Sekretariat BEM."
-        },
-        {
-            topic: "Barang rusak/hilang",
-            question: "Apa yang terjadi sanksi ganti rugi jika barang rusak atau hilang?",
-            keywords: "rusak cacat hancur hilang ilang ganti rugi tanggung jawab",
-            answer: "Peminjam bertanggung jawab penuh atas barang. Jika rusak atau hilang, peminjam wajib memperbaiki atau mengganti barang dengan spesifikasi yang sama (atau setara dalam bentuk uang)."
-        },
-        {
-            topic: "Perpanjangan",
-            question: "Bisakah saya memperpanjang perpanjang masa waktu peminjaman?",
-            keywords: "tambah waktu perpanjang lanjut ekstra hari",
-            answer: "Bisa, asalkan barang tersebut tidak sedang diantre oleh peminjam lain. Silakan ajukan perpanjangan maksimal 1 hari sebelum batas waktu habis melalui admin."
-        },
-        {
-            topic: "Batas jumlah pinjaman",
-            question: "Berapa banyak batas maksimal jumlah kuota barang yang bisa dipinjam sekaligus?",
-            keywords: "maksimal berapa barang banyak jumlah kuota limit",
-            answer: "Setiap pengguna dapat meminjam maksimal 3 jenis barang dalam satu kali transaksi, kecuali untuk keperluan acara besar yang sudah mendapat izin khusus dari Kepala BEM."
-        },
-        {
-            topic: "Login gagal",
-            question: "Kenapa saya tidak bisa login masuk gagal lupa password?",
-            keywords: "gagal login nggak bisa masuk lupa sandi password salah",
-            answer: "Pastikan username dan password Anda sudah benar. Jika lupa password, saat ini Anda harus menghubungi Admin via WhatsApp untuk melakukan reset password akun Anda."
-        },
-        {
-            topic: "Apa itu BEM",
-            question: "Apa itu definisi pengertian BEM Politeknik Purbaya organisasi?",
-            keywords: "kepanjangan bem organisasi kampus purbaya",
-            answer: "BEM (Badan Eksekutif Mahasiswa) Politeknik Purbaya adalah wadah aspirasi dan kolaborasi untuk mewujudkan mahasiswa yang progresif, inovatif, dan berintegritas tinggi."
-        }
-    ];
+    // Pastikan FAQ_DATA dari faq_data.js sudah ter-load dengan benar
+    if (typeof FAQ_DATA === 'undefined') {
+        console.error("[Chatbot] Error: FAQ_DATA belum didefinisikan! Pastikan faq_data.js di-load sebelum chatbot.js di index.html.");
+        return;
+    }
+
 
     // ==========================================
     // 2. LOGIKA NLP (TF-IDF & Cosine Similarity)
