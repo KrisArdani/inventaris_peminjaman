@@ -6,490 +6,155 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
     header("Location: ../login.php");
     exit;
 }
+$nama = htmlspecialchars($_SESSION['nama_lengkap']);
+$initials = '';
+foreach (explode(' ', $_SESSION['nama_lengkap']) as $w) $initials .= mb_substr($w, 0, 1);
+$initials = mb_strtoupper(mb_substr($initials, 0, 2));
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Anggota - Inventaris</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        body { 
-            padding-top: 80px; 
-            background-color: #f8fafc; /* Very light slate for premium clean look */
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .dashboard-container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 2rem; 
-        }
-
-        /* Hero / Welcome Card */
-        .welcome-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 3rem;
-            border-radius: 24px;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2), 0 10px 10px -5px rgba(16, 185, 129, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Decorative background elements for welcome card */
-        .welcome-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-        }
-
-        .welcome-card::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: 10%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-        }
-
-        .welcome-text {
-            position: relative;
-            z-index: 1;
-        }
-
-        .welcome-text h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.025em;
-        }
-
-        .welcome-text p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        .action-btns {
-            position: relative;
-            z-index: 1;
-        }
-
-        .action-btns .btn {
-            background: white;
-            color: var(--primary-dark);
-            font-weight: 700;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .action-btns .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-        }
-
-        .icon-blue { background: #eff6ff; color: #3b82f6; }
-        .icon-green { background: #f0fdf4; color: #10b981; }
-        .icon-yellow { background: #fefce8; color: #eab308; }
-        .icon-red { background: #fef2f2; color: #ef4444; }
-
-        .stat-info h3 {
-            font-size: 0.9rem;
-            color: #64748b;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .stat-info .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1;
-        }
-
-        /* Modern Table Card */
-        .card { 
-            background: white; 
-            border-radius: 24px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid #f1f5f9;
-            background: #ffffff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            padding: 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #f8fafc;
-            padding: 1rem 2rem;
-            text-align: left;
-            font-weight: 600;
-            color: #64748b;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        td {
-            padding: 1.25rem 2rem;
-            border-bottom: 1px solid #f1f5f9;
-            color: #334155;
-            vertical-align: middle;
-        }
-
-        tr {
-            transition: background-color 0.2s;
-        }
-
-        tr:hover {
-            background: #f8fafc;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* Status Badges - Premium Look */
-        .status-badge {
-            padding: 0.4rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-pending { background: #fefce8; color: #a16207; border: 1px solid #fde047; }
-        .status-disetujui { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-        .status-ditolak { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-
-        .btn-outline {
-            border-color: #e2e8f0;
-            color: #475569;
-            background: white;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .btn-outline:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #0f172a;
-        }
-
-        /* Item list in table */
-        .item-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .item-name {
-            font-weight: 600;
-            color: #0f172a;
-        }
-        
-        .item-meta {
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 700px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        .modal.active .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            width: 36px;
-            height: 36px;
-            background: #f1f5f9;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background: #e2e8f0;
-            color: #0f172a;
-            transform: rotate(90deg);
-        }
-
-        .detail-header {
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .detail-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .detail-info div strong {
-            display: block;
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .detail-info div span {
-            font-weight: 600;
-            color: #0f172a;
-            font-size: 1.1rem;
-        }
-
-        .alasan-tolak {
-            background: #fef2f2;
-            color: #991b1b;
-            padding: 1.25rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            border-left: 4px solid #ef4444;
-            font-size: 0.95rem;
-        }
-
-        .item-status-badge {
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-    </style>
+    <title>Dashboard Anggota - Inventaris BEM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="anggota.css?v=2.1">
 </head>
 <body>
-    <nav class="navbar scrolled">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <div class="logo-circle logo-circle--img" style="width:40px;height:40px;">
-                    <img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya" class="nav-logo-img">
-                </div>
-                <span>BEM Purbaya</span>
-            </div>
-            <div class="nav-links">
-                <a href="index.php" class="nav-link active">Dashboard</a>
-                <a href="katalog.php" class="nav-link">Katalog Barang</a>
-                <a href="../logout.php" class="nav-link btn-contact"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-            </div>
-        </div>
-    </nav>
 
-    <div class="dashboard-container">
-        <div class="welcome-card">
-            <div class="welcome-text">
-                <h1>Halo, <?= htmlspecialchars(explode(' ', trim($_SESSION['nama_lengkap']))[0]); ?>! 👋</h1>
-                <p>Selamat datang di Dashboard Anggota BEM. Pantau status peminjaman, lihat riwayat, atau jelajahi katalog inventaris barang BEM Politeknik Purbaya.</p>
-            </div>
-            <div class="action-btns">
-                <a href="katalog.php" class="btn"><i class="fa-solid fa-layer-group" style="margin-right: 0.5rem;"></i> Eksplor Inventaris</a>
-            </div>
-        </div>
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon icon-blue">
-                    <i class="fa-solid fa-box"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Total Pengajuan</h3>
-                    <div class="stat-value" id="statTotal">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-yellow">
-                    <i class="fa-solid fa-clock"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Menunggu Persetujuan</h3>
-                    <div class="stat-value" id="statPending">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-green">
-                    <i class="fa-solid fa-hand-holding-hand"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Sedang Dipinjam</h3>
-                    <div class="stat-value" id="statAktif">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon icon-red">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Terlambat</h3>
-                    <div class="stat-value" id="statTerlambat">0</div>
-                </div>
-            </div>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon"><img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+            <span>Inventaris BEM</span>
         </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fa-solid fa-clock-rotate-left" style="color: var(--primary);"></i> Riwayat Peminjaman</h2>
-                <div style="display: flex; gap: 0.75rem; align-items: center;">
-                    <select id="filterKembali" class="btn btn-outline" style="padding: 0.4rem 0.75rem; font-size: 0.85rem; border-radius: 8px; cursor: pointer; background: #f8fafc; border-color: #e2e8f0;">
-                        <option value="all">Semua Status Kembali</option>
-                        <option value="dikembalikan">Sudah Dikembalikan</option>
-                        <option value="belum">Belum Dikembalikan</option>
-                    </select>
-                    <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="loadRiwayat()"><i class="fa-solid fa-rotate-right"></i> Segarkan</button>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Menu Utama</div>
+            <a href="index.php" class="sidebar-link active">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            </a>
+            <a href="katalog.php" class="sidebar-link">
+                <i class="fa-solid fa-layer-group"></i> Katalog Inventaris
+            </a>
+            <a href="form_peminjaman.php" class="sidebar-link">
+                <i class="fa-solid fa-file-signature"></i> Form Pengajuan
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-avatar"><?= $initials ?></div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name"><?= $nama ?></div>
+                <div class="sidebar-user-role">Anggota BEM</div>
+            </div>
+            <a href="../logout.php" class="btn-logout" title="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="top-header-left">
+                <button class="btn-sidebar-toggle" id="btnToggleSidebar"><i class="fa-solid fa-bars"></i></button>
+                <div class="breadcrumb">
+                    <span class="current">Dashboard</span>
                 </div>
             </div>
-            
-            <div class="table-responsive">
-                <table id="riwayatTable">
-                    <thead>
-                        <tr>
-                            <th>ID Transaksi</th>
-                            <th>Tanggal & Waktu</th>
-                            <th>Detail Barang</th>
-                            <th>Status</th>
-                            <th style="text-align: right;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="riwayatBody">
-                        <tr><td colspan="5" style="text-align: center; padding: 3rem;"><i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i><br>Memuat data...</td></tr>
-                    </tbody>
-                </table>
+            <div class="top-header-right">
+                <a href="form_peminjaman.php" class="cart-indicator-btn" title="Lihat Pengajuan">
+                    <i class="fa-solid fa-file-signature"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Page Container -->
+        <div class="page-container">
+            <!-- Welcome Section -->
+            <div class="welcome-card">
+                <div class="welcome-text">
+                    <h1>Halo, <?= htmlspecialchars(explode(' ', trim($_SESSION['nama_lengkap']))[0]); ?>! 👋</h1>
+                    <p>Selamat datang di Dashboard Anggota BEM. Pantau status peminjaman, lihat riwayat, atau jelajahi katalog inventaris barang BEM Politeknik Purbaya.</p>
+                </div>
+                <div>
+                    <a href="katalog.php" class="btn"><i class="fa-solid fa-layer-group"></i> Eksplor Inventaris</a>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-blue">
+                        <i class="fa-solid fa-box"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Pengajuan</h3>
+                        <div class="stat-value" id="statTotal">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-yellow">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Menunggu Persetujuan</h3>
+                        <div class="stat-value" id="statPending">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-green">
+                        <i class="fa-solid fa-hand-holding-hand"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Sedang Dipinjam</h3>
+                        <div class="stat-value" id="statAktif">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-red">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Terlambat</h3>
+                        <div class="stat-value" id="statTerlambat">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-clock-rotate-left" style="color: var(--primary);"></i> Riwayat Peminjaman</h2>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <select id="filterKembali" class="btn btn-outline" style="padding: 0.4rem 0.75rem; font-size: 0.85rem; border-radius: 8px; cursor: pointer; background: #ffffff; border-color: var(--outline-variant);">
+                            <option value="all">Semua Status Kembali</option>
+                            <option value="dikembalikan">Sudah Dikembalikan</option>
+                            <option value="belum">Belum Dikembalikan</option>
+                        </select>
+                        <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="loadRiwayat()"><i class="fa-solid fa-rotate-right"></i> Segarkan</button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="riwayatTable">
+                        <thead>
+                            <tr>
+                                <th>ID Transaksi</th>
+                                <th>Tanggal & Waktu</th>
+                                <th>Detail Barang</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="riwayatBody">
+                            <tr><td colspan="5" style="text-align: center; padding: 3rem;"><i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i><br>Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -502,13 +167,13 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             </div>
             
             <div class="detail-header">
-                <h2 style="margin: 0; font-size: 1.5rem; font-weight: 800; color: #0f172a;">Detail Peminjaman</h2>
+                <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a;">Detail Peminjaman</h2>
                 <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                    <span class="text-muted" id="detIdPeminjaman" style="font-family: monospace; background: #f1f5f9; padding: 0.2rem 0.5rem; border-radius: 4px;"></span>
+                    <span class="text-muted" id="detIdPeminjaman" style="font-family: monospace; background: #f1f5f9; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 700; color: var(--primary-dark);"></span>
                 </div>
             </div>
 
-            <div id="alasanTolakContainer" style="display: none;"></div>
+            <div id="alasanTolakContainer" style="display: none; margin: 1rem 2rem 0;"></div>
 
             <div class="detail-info">
                 <div>
@@ -533,20 +198,22 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                 </div>
             </div>
 
-            <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #334155;">Daftar Barang</h3>
-            <div class="table-responsive" style="margin-bottom: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
-                <table style="width: 100%; font-size: 0.9rem;">
-                    <thead style="background: #f8fafc;">
-                        <tr>
-                            <th style="padding: 0.75rem 1rem;">Barang</th>
-                            <th style="padding: 0.75rem 1rem;">Jml</th>
-                            <th style="padding: 0.75rem 1rem;">Periode Pinjam</th>
-                            <th style="padding: 0.75rem 1rem;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="detItemsBody">
-                    </tbody>
-                </table>
+            <div style="padding: 1.5rem 2rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #334155;">Daftar Barang</h3>
+                <div class="table-responsive" style="border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden;">
+                    <table style="width: 100%; font-size: 0.9rem;">
+                        <thead style="background: #f8fafc;">
+                            <tr>
+                                <th style="padding: 0.75rem 1rem;">Barang</th>
+                                <th style="padding: 0.75rem 1rem;">Jml</th>
+                                <th style="padding: 0.75rem 1rem;">Periode Pinjam</th>
+                                <th style="padding: 0.75rem 1rem;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detItemsBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -555,6 +222,21 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
         document.addEventListener('DOMContentLoaded', () => {
             loadStats();
             loadRiwayat();
+
+            // Sidebar toggle
+            const btnToggle = document.getElementById('btnToggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (btnToggle) {
+                btnToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('active');
+                });
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            }
         });
 
         function getStatusBadge(status) {
@@ -566,10 +248,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
 
         function getReturnStatusBadge(p) {
             if (p.status_approval !== 'disetujui') return '';
-            
             const total = parseInt(p.jumlah_item) || 0;
             const kembali = parseInt(p.jumlah_dikembalikan) || 0;
-
             if (total === 0) return '';
             if (kembali === total) {
                 return '<span class="status-badge" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;"><i class="fa-solid fa-box-archive"></i> Dikembalikan</span>';
@@ -583,22 +263,16 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                 const res = await fetch('api_anggota.php?action=stats');
                 const data = await res.json();
                 if (data.success) {
-                    // Animate numbers
                     animateValue('statTotal', 0, data.total, 1000);
                     animateValue('statPending', 0, data.pending, 1000);
                     animateValue('statAktif', 0, data.aktif, 1000);
                     animateValue('statTerlambat', 0, data.terlambat, 1000);
                 }
-            } catch (err) {
-                console.error('Failed to load stats', err);
-            }
+            } catch (err) { console.error('Failed to load stats', err); }
         }
 
         function animateValue(id, start, end, duration) {
-            if (start === end) {
-                document.getElementById(id).innerHTML = end;
-                return;
-            }
+            if (start === end) { document.getElementById(id).innerHTML = end; return; }
             let range = end - start;
             let current = start;
             let increment = end > start ? 1 : -1;
@@ -607,48 +281,36 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             let timer = setInterval(function() {
                 current += increment;
                 obj.innerHTML = current;
-                if (current == end) {
-                    clearInterval(timer);
-                }
+                if (current == end) clearInterval(timer);
             }, stepTime);
         }
 
         let riwayatData = [];
-
         async function loadRiwayat() {
             const tbody = document.getElementById('riwayatBody');
             tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem;"><i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i><br>Memuat data...</td></tr>`;
-            
             try {
                 const res = await fetch('api_anggota.php?action=riwayat');
                 const data = await res.json();
-                
                 if (data.success) {
                     riwayatData = data.data;
                     renderRiwayat();
                 }
             } catch (err) {
                 console.error(err);
-                tbody.innerHTML = `<tr><td colspan="5" style="color: #ef4444; text-align: center; padding: 2rem;">Gagal memuat data. Periksa koneksi Anda.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="color: #ef4444; text-align: center; padding: 2rem;">Gagal memuat data.</td></tr>`;
             }
         }
 
         function renderRiwayat() {
             const tbody = document.getElementById('riwayatBody');
             const filterValue = document.getElementById('filterKembali').value;
-            
             let filtered = riwayatData;
-            if (filterValue === 'dikembalikan') {
-                filtered = riwayatData.filter(p => p.status_approval === 'disetujui' && parseInt(p.jumlah_dikembalikan) === parseInt(p.jumlah_item));
-            } else if (filterValue === 'belum') {
-                filtered = riwayatData.filter(p => p.status_approval === 'disetujui' && parseInt(p.jumlah_dikembalikan) < parseInt(p.jumlah_item));
-            }
+            if (filterValue === 'dikembalikan') filtered = riwayatData.filter(p => p.status_approval === 'disetujui' && parseInt(p.jumlah_dikembalikan) === parseInt(p.jumlah_item));
+            else if (filterValue === 'belum') filtered = riwayatData.filter(p => p.status_approval === 'disetujui' && parseInt(p.jumlah_dikembalikan) < parseInt(p.jumlah_item));
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 4rem; color: #64748b;">
-                    <i class="fa-solid fa-folder-open fa-3x" style="margin-bottom: 1rem; color: #cbd5e1;"></i><br>
-                    ${riwayatData.length === 0 ? 'Anda belum memiliki riwayat peminjaman.' : 'Data tidak ditemukan untuk filter ini.'}
-                </td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 4rem; color: #64748b;">Data tidak ditemukan.</td></tr>`;
                 return;
             }
 
@@ -659,7 +321,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
 
                 return `
                 <tr>
-                    <td><strong style="font-family: monospace; color: var(--primary-dark);">${p.id_peminjaman}</strong></td>
+                    <td><strong style="font-family: monospace; color: var(--primary-dark); font-weight: 700;">${p.id_peminjaman}</strong></td>
                     <td>
                         <div class="item-list">
                             <span class="item-name">${dateStr}</span>
@@ -668,7 +330,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                     </td>
                     <td>
                         <div class="item-list">
-                            <span class="item-name" style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.daftar_barang}">${p.daftar_barang}</span>
+                            <span class="item-name" style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;" title="${p.daftar_barang}">${p.daftar_barang}</span>
                             <span class="item-meta">${p.jumlah_item} jenis barang</span>
                         </div>
                     </td>
@@ -680,11 +342,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                     </td>
                     <td style="text-align: right;">
                         <button class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.85rem;" onclick="viewDetail('${p.id_peminjaman}')">
-                            Lihat Detail
+                            Detail
                         </button>
                     </td>
-                </tr>
-            `}).join('');
+                </tr>`;
+            }).join('');
         }
 
         document.getElementById('filterKembali').addEventListener('change', renderRiwayat);
@@ -695,11 +357,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                 const data = await res.json();
                 if (data.success) {
                     const p = data.peminjaman;
-                    
                     document.getElementById('detIdPeminjaman').textContent = p.id_peminjaman;
                     
                     const dateObj = new Date(p.tgl_pengajuan);
-                    document.getElementById('detTglPengajuan').innerHTML = `${dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })} <span style="color:#64748b; font-weight:normal;">pukul ${dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>`;
+                    document.getElementById('detTglPengajuan').innerHTML = `${dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })} <span style="color:#64748b; font-weight:normal; font-size:0.85rem;">pukul ${dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>`;
                     
                     document.getElementById('detStatusApproval').innerHTML = `
                         <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.25rem;">
@@ -714,7 +375,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                     const tolakCont = document.getElementById('alasanTolakContainer');
                     if (p.status_approval === 'ditolak' && p.alasan_tolak) {
                         tolakCont.style.display = 'block';
-                        tolakCont.innerHTML = `<div class="alasan-tolak"><strong style="display:block; margin-bottom:0.25rem;">Alasan Penolakan:</strong>${p.alasan_tolak}</div>`;
+                        tolakCont.className = 'alasan-tolak';
+                        tolakCont.innerHTML = `<strong style="display:block; margin-bottom:0.25rem;">Alasan Penolakan:</strong>${p.alasan_tolak}`;
                     } else {
                         tolakCont.style.display = 'none';
                     }
@@ -722,9 +384,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                     const tbody = document.getElementById('detItemsBody');
                     tbody.innerHTML = data.items.map(item => {
                         let statusHtml = '';
-                        if (item.status_item === 'dipinjam') statusHtml = '<span class="item-status-badge" style="background:#eff6ff; color:#3b82f6;">Dipinjam</span>';
-                        else if (item.status_item === 'terlambat') statusHtml = '<span class="item-status-badge" style="background:#fef2f2; color:#ef4444;">Terlambat</span>';
-                        else if (item.status_item === 'dikembalikan') statusHtml = '<span class="item-status-badge" style="background:#f0fdf4; color:#10b981;">Dikembalikan</span>';
+                        if (item.status_item === 'dipinjam') statusHtml = '<span class="status-badge" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-size: 0.7rem;"><i class="fa-solid fa-hourglass-start"></i> Dipinjam</span>';
+                        else if (item.status_item === 'terlambat') statusHtml = '<span class="status-badge" style="background:#fef2f2; color:#ef4444; border:1px solid #fecaca; font-size: 0.7rem;"><i class="fa-solid fa-circle-exclamation"></i> Terlambat</span>';
+                        else if (item.status_item === 'dikembalikan') statusHtml = '<span class="status-badge" style="background:#f0fdf4; color:#10b981; border:1px solid #bbf7d0; font-size: 0.7rem;"><i class="fa-solid fa-circle-check"></i> Dikembalikan</span>';
 
                         const tglPinjam = new Date(item.tgl_pinjam).toLocaleDateString('id-ID', {day:'numeric', month:'short'});
                         const tglKembali = new Date(item.tgl_kembali_rencana).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
@@ -745,26 +407,12 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                     }).join('');
 
                     document.getElementById('detailModal').classList.add('active');
-                } else {
-                    alert('Gagal memuat detail: ' + data.message);
                 }
-            } catch (err) {
-                console.error(err);
-                alert('Terjadi kesalahan jaringan.');
-            }
+            } catch (err) { console.error(err); }
         }
 
-        function closeModal() {
-            document.getElementById('detailModal').classList.remove('active');
-        }
-
-        // Close modal on outside click
-        window.onclick = function(event) {
-            const modal = document.getElementById('detailModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
+        function closeModal() { document.getElementById('detailModal').classList.remove('active'); }
+        window.onclick = function(event) { if (event.target == document.getElementById('detailModal')) closeModal(); }
     </script>
 </body>
 </html>

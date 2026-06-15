@@ -6,397 +6,169 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
     header("Location: ../login.php");
     exit;
 }
+$nama = htmlspecialchars($_SESSION['nama_lengkap']);
+$initials = '';
+foreach (explode(' ', $_SESSION['nama_lengkap']) as $w) $initials .= mb_substr($w, 0, 1);
+$initials = mb_strtoupper(mb_substr($initials, 0, 2));
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Peminjaman - Inventaris BEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        body { 
-            padding-top: 100px; 
-            background-color: #f8fafc;
-            font-family: 'Inter', sans-serif;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: 'Manrope', sans-serif;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 2rem 4rem;
-        }
-
-        .page-header {
-            margin-bottom: 2.5rem;
-        }
-
-        .page-header h1 {
-            font-size: 2.5rem;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-            font-weight: 800;
-        }
-
-        .page-header p {
-            color: #64748b;
-            font-size: 1.1rem;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-        }
-
-        .cart-section {
-            padding: 2.5rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .cart-header h2 {
-            font-size: 1.5rem;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .btn-tambah {
-            background: #f0fdf4;
-            color: var(--primary);
-            border: 1px solid #bbf7d0;
-            padding: 0.6rem 1.25rem;
-            border-radius: 999px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-
-        .btn-tambah:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .cart-items {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-        }
-
-        .item-info h3 {
-            font-size: 1.15rem;
-            color: #0f172a;
-            margin-bottom: 0.25rem;
-        }
-
-        .item-meta {
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        .item-actions {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .qty-control {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .qty-label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #475569;
-        }
-
-        .qty-input {
-            width: 70px;
-            padding: 0.5rem;
-            text-align: center;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-weight: 600;
-            font-family: inherit;
-        }
-
-        .btn-remove {
-            color: #ef4444;
-            background: #fef2f2;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-
-        .btn-remove:hover {
-            background: #fee2e2;
-            transform: scale(1.05);
-        }
-
-        .form-section {
-            padding: 2.5rem;
-            background: #f8fafc;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (min-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .form-group label {
-            font-weight: 700;
-            color: #334155;
-            font-size: 0.95rem;
-        }
-
-        .form-group input[type="text"],
-        .form-group textarea,
-        .form-group input[type="date"] {
-            padding: 1rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 1rem;
-            color: #0f172a;
-            background: white;
-            transition: all 0.2s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        .terms-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 16px;
-        }
-
-        .terms-checkbox input[type="checkbox"] {
-            margin-top: 0.25rem;
-            width: 1.25rem;
-            height: 1.25rem;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-
-        .terms-checkbox label {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #166534;
-            cursor: pointer;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 1.25rem;
-            border-radius: 16px;
-            font-size: 1.15rem;
-            font-weight: 800;
-            font-family: 'Manrope', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 20px -3px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-submit:disabled {
-            background: #94a3b8;
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            color: #cbd5e1;
-            margin-bottom: 1.5rem;
-        }
-
-        .empty-state h3 {
-            font-size: 1.5rem;
-            color: #334155;
-            margin-bottom: 0.5rem;
-        }
-    </style>
+    <title>Form Pengajuan - Inventaris BEM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="anggota.css?v=2.1">
 </head>
 <body>
-    <nav class="navbar scrolled">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <div class="logo-circle" style="background-color: var(--primary);"><i class="fa-solid fa-user"></i></div>
-                <span><?= htmlspecialchars($_SESSION['nama_lengkap']); ?></span>
-            </div>
-            <div class="nav-links">
-                <a href="index.php" class="nav-link">Dashboard</a>
-                <a href="katalog.php" class="nav-link">Katalog Barang</a>
-                <a href="../logout.php" class="nav-link btn-contact"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-            </div>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon"><img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+            <span>Inventaris BEM</span>
         </div>
-    </nav>
-
-    <div class="container">
-        <div class="page-header">
-            <h1>Form Peminjaman</h1>
-            <p>Konfirmasi barang yang ingin Anda pinjam dan tentukan tanggalnya.</p>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Menu Utama</div>
+            <a href="index.php" class="sidebar-link">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            </a>
+            <a href="katalog.php" class="sidebar-link">
+                <i class="fa-solid fa-layer-group"></i> Katalog Inventaris
+            </a>
+            <a href="form_peminjaman.php" class="sidebar-link active">
+                <i class="fa-solid fa-file-signature"></i> Form Pengajuan
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-avatar"><?= $initials ?></div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name"><?= $nama ?></div>
+                <div class="sidebar-user-role">Anggota BEM</div>
+            </div>
+            <a href="../logout.php" class="btn-logout" title="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
         </div>
+    </aside>
 
-        <div class="form-card">
-            <div class="cart-section">
-                <div class="cart-header">
-                    <h2><i class="fa-solid fa-box-open" style="color: var(--primary);"></i> Barang Terpilih</h2>
-                    <a href="katalog.php" class="btn-tambah"><i class="fa-solid fa-plus"></i> Tambah Barang Lain</a>
-                </div>
-
-                <div id="cartItemsContainer" class="cart-items">
-                    <!-- Injected via JS -->
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="top-header-left">
+                <button class="btn-sidebar-toggle" id="btnToggleSidebar"><i class="fa-solid fa-bars"></i></button>
+                <div class="breadcrumb">
+                    <a href="index.php">Dashboard</a>
+                    <span class="sep">/</span>
+                    <span class="current">Form Pengajuan Peminjaman</span>
                 </div>
             </div>
+            <div class="top-header-right">
+                <div class="cart-indicator-btn" title="Pengajuan Aktif">
+                    <i class="fa-solid fa-file-signature"></i>
+                    <div class="cart-badge" id="headerCartBadge" style="display: none;">0</div>
+                </div>
+            </div>
+        </header>
 
-            <div class="form-section" id="formSection" style="display: none;">
-                <form id="peminjamanForm">
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label for="nama_kegiatan">Nama Kegiatan / Acara</label>
-                            <input type="text" id="nama_kegiatan" placeholder="Contoh: Rapat Kerja BEM 2026" required>
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label for="tujuan">Tujuan / Keperluan Peminjaman</label>
-                            <textarea id="tujuan" placeholder="Jelaskan secara singkat untuk apa barang ini digunakan..." required></textarea>
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label for="lokasi">Lokasi Penggunaan (Tempat Acara)</label>
-                            <input type="text" id="lokasi" placeholder="Contoh: Gedung A Ruang 101" required>
-                        </div>
+        <!-- Page Container -->
+        <div class="page-container" style="max-width: 900px;">
+            <div class="page-header" style="margin-bottom: 2rem;">
+                <h1 class="page-title">Form Pengajuan Peminjaman</h1>
+                <p class="page-subtitle">Konfirmasi inventaris terpilih dan lengkapi rincian kegiatan Anda.</p>
+            </div>
 
-                        <div class="form-group">
-                            <label for="tgl_pinjam">Tanggal Pinjam</label>
-                            <input type="date" id="tgl_pinjam" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tgl_kembali">Tanggal Kembali (Rencana)</label>
-                            <input type="date" id="tgl_kembali" required>
-                        </div>
+            <div class="form-card">
+                <!-- Cart Section -->
+                <div class="cart-section">
+                    <div class="cart-header">
+                        <h2><i class="fa-solid fa-boxes-stacked" style="color: var(--primary);"></i> Inventaris Terpilih</h2>
+                        <a href="katalog.php" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem;"><i class="fa-solid fa-plus"></i> Tambah Barang</a>
                     </div>
-                    
-                    <div class="terms-checkbox">
-                        <input type="checkbox" id="syarat_ketentuan" required>
-                        <label for="syarat_ketentuan">
-                            <strong>Saya menyetujui Syarat & Ketentuan Peminjaman:</strong><br>
-                            1. Bersedia menjaga barang dengan baik selama masa peminjaman.<br>
-                            2. Akan mengembalikan barang tepat waktu sesuai tanggal rencana kembali.<br>
-                            3. Bersedia mengganti rugi jika terjadi kerusakan atau kehilangan barang akibat kelalaian pribadi/kepanitiaan.
+                    <div id="cartItemsContainer" class="cart-items">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Form Inputs Section -->
+                <div class="form-section" id="formSection" style="display: none;">
+                    <form id="peminjamanForm" novalidate>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="nama_kegiatan">Nama Kegiatan / Agenda Acara</label>
+                                <input type="text" id="nama_kegiatan" placeholder="Contoh: Rapat Koordinasi Wilayah BEM Politeknik Purbaya" required>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="tujuan">Tujuan & Rencana Keperluan</label>
+                                <textarea id="tujuan" placeholder="Jelaskan tujuan peminjaman barang inventaris ini..." rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="lokasi">Lokasi Penggunaan Barang</label>
+                                <input type="text" id="lokasi" placeholder="Contoh: Aula Kampus Purbaya / Ruang Rapat Sekretariat BEM" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tgl_pinjam">Tanggal Mulai Peminjaman</label>
+                                <input type="date" id="tgl_pinjam" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="tgl_kembali">Tanggal Pengembalian Rencana</label>
+                                <input type="date" id="tgl_kembali" required>
+                            </div>
+                        </div>
+                        
+                        <label class="terms-checkbox" for="syarat_ketentuan">
+                            <input type="checkbox" id="syarat_ketentuan" required>
+                            <span>
+                                <strong>Syarat & Ketentuan Peminjaman Inventaris:</strong><br>
+                                1. Bertanggung jawab penuh atas kebersihan dan keutuhan barang selama masa peminjaman.<br>
+                                2. Bersedia mengembalikan barang sesuai dengan tanggal rencana yang ditentukan.<br>
+                                3. Wajib mengganti rugi secara mandiri apabila barang rusak atau hilang karena kelalaian.
+                            </span>
                         </label>
-                    </div>
-                    
-                    <button type="submit" class="btn-submit" id="btnSubmit">
-                        <i class="fa-solid fa-paper-plane"></i> Ajukan Peminjaman Sekarang
-                    </button>
-                </form>
+                        
+                        <button type="submit" class="btn btn-primary" id="btnSubmit" style="width: 100%; padding: 1rem; font-size: 1.05rem;">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Formulir Pengajuan
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
-        // Set min date to today
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('tgl_pinjam').min = today;
-        document.getElementById('tgl_kembali').min = today;
+        // Set min date values
+        const todayStr = new Date().toISOString().split('T')[0];
+        document.getElementById('tgl_pinjam').min = todayStr;
+        document.getElementById('tgl_kembali').min = todayStr;
 
         document.addEventListener('DOMContentLoaded', () => {
             renderCart();
             document.getElementById('peminjamanForm').addEventListener('submit', submitPeminjaman);
+
+            // Sidebar toggle
+            const btnToggle = document.getElementById('btnToggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (btnToggle) {
+                btnToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('active');
+                });
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            }
         });
 
         function getCart() {
@@ -406,14 +178,29 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
 
         function saveCart(cart) {
             localStorage.setItem('cart_peminjaman', JSON.stringify(cart));
+            updateHeaderCartBadge();
         }
 
-        function updateCartQty(id, qty) {
+        function updateHeaderCartBadge() {
+            const cart = getCart();
+            const badge = document.getElementById('headerCartBadge');
+            if (cart.length > 0) {
+                badge.style.display = 'grid';
+                badge.textContent = cart.length;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function adjustQty(id, diff) {
             let cart = getCart();
             const item = cart.find(i => i.id_barang === id);
             if (item) {
-                qty = parseInt(qty);
-                if (qty > parseInt(item.stok_tersedia)) qty = parseInt(item.stok_tersedia);
+                let qty = parseInt(item.jumlah_pinjam) + diff;
+                if (qty > parseInt(item.stok_tersedia)) {
+                    qty = parseInt(item.stok_tersedia);
+                    showToast('Batas maksimum stok tersedia tercapai', 'error');
+                }
                 if (qty < 1) qty = 1;
                 item.jumlah_pinjam = qty;
                 saveCart(cart);
@@ -426,6 +213,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             cart = cart.filter(item => item.id_barang !== id);
             saveCart(cart);
             renderCart();
+            showToast('Barang berhasil dihapus dari daftar pilihan', 'success');
         }
 
         function renderCart() {
@@ -433,13 +221,15 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             const container = document.getElementById('cartItemsContainer');
             const formSection = document.getElementById('formSection');
 
+            updateHeaderCartBadge();
+
             if (cart.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fa-solid fa-basket-shopping"></i>
-                        <h3>Belum ada barang dipilih</h3>
-                        <p style="color: #64748b;">Silakan kembali ke katalog untuk memilih barang.</p>
-                        <a href="katalog.php" class="btn-tambah" style="margin-top: 1.5rem; padding: 0.8rem 2rem;">Ke Katalog</a>
+                    <div style="text-align:center; padding: 4rem 2rem; color: var(--on-surface-variant);">
+                        <i class="fa-solid fa-basket-shopping fa-3x" style="color: var(--outline); margin-bottom: 1rem;"></i>
+                        <h3 style="font-size: 1.2rem; font-weight:700; color: var(--on-surface);">Daftar Pengajuan Kosong</h3>
+                        <p style="font-size: 0.9rem; margin-top:0.25rem;">Silakan pilih barang inventaris terlebih dahulu melalui katalog.</p>
+                        <a href="katalog.php" class="btn btn-primary" style="margin-top: 1.5rem;"><i class="fa-solid fa-arrow-left"></i> Kembali ke Katalog</a>
                     </div>
                 `;
                 formSection.style.display = 'none';
@@ -450,16 +240,19 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             container.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="item-info">
-                        <h3>${item.nama_barang}</h3>
-                        <span class="item-meta">Tersedia: ${item.stok_tersedia} | Kategori: ${item.kategori}</span>
+                        <h3 style="font-size: 1.05rem; font-weight: 700;">${item.nama_barang}</h3>
+                        <span class="item-meta" style="font-size: 0.8rem; color: var(--on-surface-variant);">
+                            Tersedia: ${item.stok_tersedia} | Kategori: ${item.kategori}
+                        </span>
                     </div>
-                    <div class="item-actions">
+                    <div style="display: flex; align-items: center; gap: 1.25rem;">
                         <div class="qty-control">
-                            <span class="qty-label">Jumlah:</span>
-                            <input type="number" class="qty-input" value="${item.jumlah_pinjam}" min="1" max="${item.stok_tersedia}" onchange="updateCartQty('${item.id_barang}', this.value)">
+                            <button type="button" class="qty-btn" onclick="adjustQty('${item.id_barang}', -1)">-</button>
+                            <input type="text" class="qty-input" value="${item.jumlah_pinjam}" readonly>
+                            <button type="button" class="qty-btn" onclick="adjustQty('${item.id_barang}', 1)">+</button>
                         </div>
                         <button type="button" class="btn-remove" onclick="removeFromCart('${item.id_barang}')" title="Hapus Barang">
-                            <i class="fa-solid fa-trash"></i>
+                            <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </div>
                 </div>
@@ -471,20 +264,25 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
             const cart = getCart();
             if (cart.length === 0) return;
 
-            const nama_kegiatan = document.getElementById('nama_kegiatan').value;
-            const tujuan = document.getElementById('tujuan').value;
-            const lokasi = document.getElementById('lokasi').value;
+            const nama_kegiatan = document.getElementById('nama_kegiatan').value.trim();
+            const tujuan = document.getElementById('tujuan').value.trim();
+            const lokasi = document.getElementById('lokasi').value.trim();
             const tgl_pinjam = document.getElementById('tgl_pinjam').value;
             const tgl_kembali = document.getElementById('tgl_kembali').value;
             const termsChecked = document.getElementById('syarat_ketentuan').checked;
 
+            if (!nama_kegiatan || !tujuan || !lokasi || !tgl_pinjam || !tgl_kembali) {
+                showToast('Lengkapi semua rincian formulir pengajuan', 'error');
+                return;
+            }
+
             if (!termsChecked) {
-                alert('Anda harus menyetujui Syarat & Ketentuan Peminjaman.');
+                showToast('Anda harus menyetujui Syarat & Ketentuan peminjaman', 'error');
                 return;
             }
 
             if (tgl_kembali < tgl_pinjam) {
-                alert('Tanggal kembali tidak boleh lebih awal dari tanggal pinjam.');
+                showToast('Tanggal kembali tidak boleh mendahului tanggal pinjam', 'error');
                 return;
             }
 
@@ -502,7 +300,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
 
             const btn = document.getElementById('btnSubmit');
             const originalHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Pengajuan...';
             btn.disabled = true;
 
             try {
@@ -514,19 +312,39 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'anggota') {
                 const data = await res.json();
 
                 if (data.success) {
-                    localStorage.removeItem('cart_peminjaman'); // clear cart
-                    alert('Pengajuan berhasil dibuat! Menunggu persetujuan admin.');
-                    window.location.href = 'index.php'; // redirect to dashboard
+                    localStorage.removeItem('cart_peminjaman');
+                    alert('Pengajuan peminjaman barang inventaris berhasil dikirim! Menunggu konfirmasi Admin.');
+                    window.location.href = 'index.php';
                 } else {
-                    alert('Gagal: ' + data.message);
+                    showToast(data.message || 'Gagal mengirim pengajuan', 'error');
                 }
             } catch (err) {
                 console.error(err);
-                alert('Terjadi kesalahan jaringan.');
+                showToast('Terjadi kesalahan jaringan, hubungi admin', 'error');
             } finally {
                 btn.innerHTML = originalHtml;
                 btn.disabled = false;
             }
+        }
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+            const icon = type === 'error' ? 'fa-solid fa-circle-xmark' : 'fa-solid fa-circle-check';
+            toast.innerHTML = `<i class="${icon}"></i><span>${msg}</span>`;
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 50);
+
+            // Auto dismiss
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
         }
     </script>
 </body>

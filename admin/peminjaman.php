@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
@@ -17,7 +17,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <title>Manajemen Peminjaman — Admin Inventaris</title>
     <meta name="description" content="Kelola peminjaman barang inventaris BEM Politeknik Purbaya">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css?v=5">
     <link rel="stylesheet" href="peminjaman.css">
 </head>
 <body>

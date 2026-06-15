@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'kepala') {
     header("Location: ../login.php");
@@ -17,7 +17,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <title>Laporan — Kepala Inventaris</title>
     <meta name="description" content="Laporan data inventaris BEM Politeknik Purbaya">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../admin/admin.css">
+    <link rel="stylesheet" href="../admin/admin.css?v=5">
     <style>
         .report-cards {
             display: grid;

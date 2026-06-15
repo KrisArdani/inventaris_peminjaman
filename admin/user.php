@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../login.php");
@@ -17,7 +17,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <title>Kelola User — Admin Inventaris</title>
     <meta name="description" content="Kelola akun pengguna aplikasi inventaris BEM">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css?v=5">
     <style>
         .role-badge {
             padding: 0.25rem 0.75rem;
