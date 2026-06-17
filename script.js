@@ -88,56 +88,59 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'BPH (Badan Pengurus Harian)',
             desc: 'Badan Pengurus Harian yang mengkoordinasikan seluruh aktivitas dan administrasi BEM.',
             members: [
-                { name: 'Ahmad Faisal', role: 'Ketua Umum', initial: 'AF' },
-                { name: 'Siti Nurhaliza', role: 'Wakil Ketua', initial: 'SN' },
-                { name: 'Budi Santoso', role: 'Sekretaris Umum', initial: 'BS' },
-                { name: 'Rina Wijaya', role: 'Bendahara Umum', initial: 'RW' }
+                { name: 'Reza Surya Sanjaya', role: 'Presiden Mahasiswa', initial: 'RS' },
+                { name: 'Shinta Qurrota Aini', role: 'Wakil Presiden Mahasiswa', initial: 'SQ' },
+                { name: 'Sabella Norly', role: 'Sekretaris Jenderal', initial: 'SN' },
+                { name: 'Zalfaa Guava Rahma', role: 'Sekretaris 1', initial: 'ZG' },
+                { name: 'Ayesha Lutfun Nisa', role: 'Sekretaris 2', initial: 'AL' },
+                { name: 'Eka Bintang Nabila', role: 'Bendahara 1', initial: 'EB' },
+                { name: 'Mega Ario Selviyani', role: 'Bendahara 2', initial: 'MA' }
             ]
         },
         'dalam_negeri': {
             title: 'Departemen Dalam Negeri',
             desc: 'Fokus pada kesejahteraan, aspirasi, dan harmonisasi internal mahasiswa kampus.',
             members: [
-                { name: 'Dian Ananda', role: 'Kepala Departemen', initial: 'DA' },
-                { name: 'Eko Prasetyo', role: 'Sekretaris Dept.', initial: 'EP' },
-                { name: 'Fina Lestari', role: 'Staff Ahli', initial: 'FL' }
+                { name: 'Siti Nur Aisyah', role: 'Kepala Departemen', initial: 'SN' },
+                { name: 'Ferdinand Markus Saerang', role: 'Staff Birokrasi', initial: 'FM' },
+                { name: 'Hidayat', role: 'Staff Birokrasi', initial: 'H' },
+                { name: 'Fadhila Kirana Utami', role: 'Staff Kemahasiswaan', initial: 'FK' }
             ]
         },
         'luar_negeri': {
             title: 'Departemen Luar Negeri',
             desc: 'Membangun relasi dan kerja sama dengan instansi, kampus lain, serta pihak eksternal.',
             members: [
-                { name: 'Gilang Ramadhan', role: 'Kepala Departemen', initial: 'GR' },
-                { name: 'Hana Putri', role: 'Sekretaris Dept.', initial: 'HP' },
-                { name: 'Irfan Hakim', role: 'Staff Humas Eksternal', initial: 'IH' }
+                { name: 'Dewi Aulia Rizki', role: 'Kepala Departemen', initial: 'DA' },
+                { name: 'Muhammad Kholiludin Rendi', role: 'Staff Diplomasi', initial: 'MK' },
+                { name: 'Mumtaz Nadiyah Rahayu', role: 'Staff Pengabdian Masyarakat', initial: 'MN' }
             ]
         },
         'kominfo': {
             title: 'Departemen Kominfo',
             desc: 'Mengelola informasi, media sosial, publikasi, dan desain visual organisasi.',
             members: [
-                { name: 'Kevin Julio', role: 'Kepala Departemen', initial: 'KJ' },
-                { name: 'Lia Aminah', role: 'Desainer Grafis', initial: 'LA' },
-                { name: 'Maya Sari', role: 'Admin Sosial Media', initial: 'MS' },
-                { name: 'Nino Fernandez', role: 'Videografer', initial: 'NF' }
+                { name: 'Ahmad Assadulah', role: 'Kepala Departemen', initial: 'AA' },
+                { name: 'Zahwa Amir', role: 'Staff Desain Grafis', initial: 'ZA' }
             ]
         },
         'adkesma': {
             title: 'Departemen Adkesma',
             desc: 'Advokasi dan Kesejahteraan Mahasiswa untuk memastikan hak-hak mahasiswa terpenuhi.',
             members: [
-                { name: 'Oscar Darmawan', role: 'Kepala Departemen', initial: 'OD' },
-                { name: 'Putri Kirana', role: 'Staff Advokasi', initial: 'PK' },
-                { name: 'Qory Sandioriva', role: 'Staff Kesejahteraan', initial: 'QS' }
+                { name: 'Refa Apriliani', role: 'Kepala Departemen', initial: 'RA' },
+                { name: 'Nadhirotus Syaima', role: 'Staff Advokasi', initial: 'NS' },
+                { name: 'Devi Aliya Kurniyanti', role: 'Staff Kewirausahaan', initial: 'DA' }
             ]
         },
         'psdm': {
             title: 'Departemen PSDM',
             desc: 'Pengembangan Sumber Daya Mahasiswa melalui pelatihan dan kaderisasi kepemimpinan.',
             members: [
-                { name: 'Reza Rahardian', role: 'Kepala Departemen', initial: 'RR' },
-                { name: 'Siska Lorenza', role: 'Staff Kaderisasi', initial: 'SL' },
-                { name: 'Tomi Hidayat', role: 'Staff Pelatihan', initial: 'TH' }
+                { name: 'Wahfiudin Reza Pahlevi', role: 'Kepala Departemen', initial: 'WR' },
+                { name: 'Nayla Salsabila', role: 'Staff Birokrasi', initial: 'NS' },
+                { name: 'Sri Zakiyah', role: 'Staff Birokrasi', initial: 'SZ' },
+                { name: 'Rizka Febriani', role: 'Staff Birokrasi', initial: 'RF' }
             ]
         }
     };

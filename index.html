@@ -11,7 +11,7 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
     <!-- Navbar -->
@@ -49,6 +49,14 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-overlay"></div>
+        
+        <!-- Hero Particles -->
+        <div class="hero-particles">
+            <div class="particle particle-1"></div>
+            <div class="particle particle-2"></div>
+            <div class="particle particle-3"></div>
+        </div>
+
         <div class="hero-content">
             <div class="badge fade-up">Badan Eksekutif Mahasiswa</div>
             <h1 class="hero-title fade-up delay-1">Politeknik Purbaya</h1>
@@ -69,6 +77,11 @@
 
     <!-- Visi & Misi Section -->
     <section id="about" class="about">
+        <!-- Abstract Blobs -->
+        <div class="blob-container">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+        </div>
         <div class="container">
             <div class="section-header reveal">
                 <h2 class="section-title">Visi & Misi</h2>
@@ -119,19 +132,19 @@
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item reveal">
-                    <h3 class="stat-number">6+</h3>
+                    <h3 class="stat-number">6</h3>
                     <p class="stat-label">Departemen Aktif</p>
                 </div>
                 <div class="stat-item reveal delay-1">
-                    <h3 class="stat-number">50+</h3>
+                    <h3 class="stat-number">25</h3>
                     <p class="stat-label">Program Kerja</p>
                 </div>
                 <div class="stat-item reveal delay-2">
-                    <h3 class="stat-number">100+</h3>
+                    <h3 class="stat-number">23</h3>
                     <p class="stat-label">Pengurus BEM</p>
                 </div>
                 <div class="stat-item reveal delay-3">
-                    <h3 class="stat-number">1K+</h3>
+                    <h3 class="stat-number">300+</h3>
                     <p class="stat-label">Mahasiswa Terlibat</p>
                 </div>
             </div>
@@ -140,6 +153,11 @@
 
     <!-- Departments Section -->
     <section id="departments" class="departments">
+        <!-- Abstract Blobs -->
+        <div class="blob-container">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+        </div>
         <div class="container">
             <div class="section-header reveal">
                 <h2 class="section-title">Struktur Organisasi</h2>
@@ -243,9 +261,9 @@
                 <div class="footer-contact">
                     <h3>Hubungi Kami</h3>
                     <ul>
-                        <li><i class="fa-solid fa-location-dot"></i> Jl. Raya Purbaya, Gedung Kampus Utama, Ruang Sekretariat BEM</li>
-                        <li><i class="fa-solid fa-phone"></i> +62 812 3456 7890</li>
-                        <li><i class="fa-solid fa-envelope"></i> bem@purbaya.ac.id</li>
+                        <li><i class="fa-solid fa-location-dot"></i> Jl merapi No. 02  Kec. Slawi, Kab. Tegal 52414</li>
+                        <li><i class="fa-solid fa-phone"></i> 0895-2517-1617</li>
+                        <li><i class="fa-solid fa-envelope"></i> bempurbaya@gmail.com</li>
                     </ul>
                 </div>
             </div>
@@ -275,7 +293,9 @@
 
     <!-- Chatbot Widget -->
     <div id="chatbot-toggle" title="Asisten BEM">
+        <span class="chatbot-online-dot"></span>
         <i class="fa-solid fa-robot"></i>
+        <div class="chatbot-hint-bubble">Tanya BEM 💬</div>
     </div>
 
     <div id="chatbot-window">
