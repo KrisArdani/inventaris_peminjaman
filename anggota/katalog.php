@@ -18,7 +18,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Barang - Inventaris BEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="anggota.css?v=2.1">
+    <link rel="stylesheet" href="anggota.css?v=4.0">
 </head>
 <body>
 
@@ -79,8 +79,15 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
         <div class="page-container">
             <!-- Catalog Header -->
             <div class="katalog-header">
-                <h1>Katalog Inventaris</h1>
-                <p>Sistem Pendataan & Informasi Barang Inventaris Politeknik Purbaya.</p>
+                <div class="katalog-header-mesh"></div>
+                <div class="katalog-header-dots"></div>
+                <div class="katalog-header-content">
+                    <div class="katalog-badge">
+                        <i class="fa-solid fa-layer-group"></i> BEM KM Politeknik Purbaya
+                    </div>
+                    <h1>Katalog Inventaris</h1>
+                    <p>Sistem Pendataan & Informasi Barang Inventaris Politeknik Purbaya.</p>
+                </div>
             </div>
 
             <!-- Controls -->

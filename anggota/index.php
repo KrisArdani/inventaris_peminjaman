@@ -18,7 +18,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Anggota - Inventaris BEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="anggota.css?v=2.1">
+    <link rel="stylesheet" href="anggota.css?v=4.0">
 </head>
 <body>
 
@@ -77,6 +77,9 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
             <!-- Welcome Section -->
             <div class="welcome-card">
                 <div class="welcome-text">
+                    <div class="katalog-badge" style="margin-bottom: 1rem;">
+                        <i class="fa-solid fa-circle-user"></i> Panel Anggota
+                    </div>
                     <h1>Halo, <?= htmlspecialchars(explode(' ', trim($_SESSION['nama_lengkap']))[0]); ?>! 👋</h1>
                     <p>Selamat datang di Dashboard Anggota BEM. Pantau status peminjaman, lihat riwayat, atau jelajahi katalog inventaris barang BEM Politeknik Purbaya.</p>
                 </div>

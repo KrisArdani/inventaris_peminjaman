@@ -52,7 +52,7 @@ INSERT INTO `barang` (`id_barang`, `nama_barang`, `kategori`, `stok_total`, `sto
 ('BRG-006', 'Spidol Whiteboard', 'Barang Habis Pakai', 30, 25, 'Ruang Rapat', NULL, '2026-05-07 09:29:00', '../assets/images/barang/papan_tulis.png'),
 ('BRG-007', 'Kabel Roll 10m', 'Barang Habis Pakai', 6, 5, 'Gudang Utama', NULL, '2026-05-07 09:29:00', '../assets/images/barang/kabel_roll.png'),
 ('BRG-008', 'Tenda 3x3m', 'Barang Habis Pakai', 4, 4, 'Gudang Utama', NULL, '2026-05-07 09:29:00', '../assets/images/barang/tenda.png'),
-('BRG-009', 'Kertas HVS A4', 'Barang Habis Pakai', 100, 80, 'Ruang Sekretariat', NULL, '2026-05-07 09:29:00', '../assets/images/barang/bola_futsal.png'),
+('BRG-009', 'Kertas HVS A4', 'Barang Habis Pakai', 100, 80, 'Ruang Sekretariat', NULL, '2026-05-07 09:29:00', '../assets/images/barang/kertas_hvs.png'),
 ('BRG-010', 'Kamera DSLR Canon', 'Barang Habis Pakai', 1, 0, 'Ruang Sekretariat', NULL, '2026-05-07 09:29:00', '../assets/images/barang/kamera.png'),
 ('BRG-011', 'Kulkas Polytron', 'Barang Tidak Habis Pakai', 2, 2, 'Gudang Utama', NULL, '2026-05-09 06:22:05', NULL),
 ('BRG-012', 'tiker', 'Barang Tidak Habis Pakai', 1, 1, 'Gudang Utama', 'BRG-012_1778310496.png', '2026-05-09 07:08:16', '../assets/images/barang/BRG-012_1778310496.png');

@@ -345,43 +345,69 @@ a {
 
 /* General Layout Elements */
 .welcome-card {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, #0f2c19 0%, #050b07 100%);
     color: #ffffff;
-    padding: 3rem;
+    padding: 3.5rem 3rem;
     border-radius: var(--radius-xl);
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 12px 30px -10px rgba(56, 102, 65, 0.35);
+    box-shadow: 0 20px 40px -15px rgba(5, 15, 8, 0.6);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .welcome-card::before {
     content: '';
     position: absolute;
-    top: -30%;
+    top: -20%;
+    left: -10%;
+    width: 60%;
+    height: 140%;
+    background: radial-gradient(circle, rgba(56, 102, 65, 0.55) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+    animation: pulse-glow-1 12s infinite alternate ease-in-out;
+}
+
+.welcome-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
     right: -10%;
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
-    border-radius: 50%;
+    width: 50%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(78, 222, 163, 0.22) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+    animation: pulse-glow-2 15s infinite alternate ease-in-out;
 }
 
 .welcome-text {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 .welcome-text h1 {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     font-weight: 800;
     letter-spacing: -0.03em;
     margin-bottom: 0.5rem;
     color: #ffffff;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+    .welcome-text h1 {
+        background: linear-gradient(120deg, #ffffff 40%, #a7f3d0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 }
 
 .welcome-text p {
@@ -389,6 +415,8 @@ a {
     opacity: 0.9;
     max-width: 550px;
     line-height: 1.6;
+    color: #cbd5e1;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .welcome-card .btn {
@@ -608,28 +636,137 @@ tr:hover {
 
 /* CATALOG STYLES */
 .katalog-header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, #0f2c19 0%, #050b07 100%);
     color: #ffffff;
-    padding: 3rem 2rem;
-    border-radius: var(--radius-lg);
-    margin-bottom: 2rem;
+    padding: 4.5rem 2rem;
+    border-radius: var(--radius-xl);
+    margin-bottom: 2.5rem;
     text-align: center;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 20px 40px -15px rgba(5, 15, 8, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.katalog-header::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 60%;
+    height: 140%;
+    background: radial-gradient(circle, rgba(56, 102, 65, 0.6) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+    animation: pulse-glow-1 12s infinite alternate ease-in-out;
+}
+
+.katalog-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: -10%;
+    width: 50%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(78, 222, 163, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+    animation: pulse-glow-2 15s infinite alternate ease-in-out;
+}
+
+.katalog-header-mesh {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-position: center;
+    mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.katalog-header-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1.5px, transparent 1.5px);
+    background-size: 16px 16px;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.katalog-header-content {
+    position: relative;
+    z-index: 3;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.katalog-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.45rem 1.15rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #a7f3d0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.75rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.katalog-badge i {
+    font-size: 0.8rem;
+    color: #2b4d31;
+    background: #ffffff;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .katalog-header h1 {
-    font-size: 2.25rem;
+    font-size: 3.25rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    line-height: 1.25;
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+    .katalog-header h1 {
+        background: linear-gradient(135deg, #ffffff 40%, #a7f3d0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 }
 
 .katalog-header p {
-    font-size: 1.05rem;
-    opacity: 0.85;
-    max-width: 500px;
+    font-size: 1.15rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 580px;
     margin: 0 auto;
+    line-height: 1.6;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .controls-wrapper {
@@ -694,9 +831,27 @@ tr:hover {
 
 .barang-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
     margin-bottom: 3rem;
+}
+
+@media (max-width: 800px) {
+    .barang-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .barang-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 400px) {
+    .barang-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .barang-card {
@@ -1125,4 +1280,24 @@ tr:hover {
     .filter-kategori {
         width: 100%;
     }
+    .katalog-header {
+        padding: 3rem 1.5rem;
+    }
+    .katalog-header h1 {
+        font-size: 2.25rem;
+    }
+    .katalog-header p {
+        font-size: 1rem;
+    }
+}
+
+/* Animations for premium glowing blobs */
+@keyframes pulse-glow-1 {
+    0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+    100% { transform: scale(1.15) translate(5%, 5%); opacity: 0.9; }
+}
+
+@keyframes pulse-glow-2 {
+    0% { transform: scale(1.1) translate(0, 0); opacity: 0.8; }
+    100% { transform: scale(0.9) translate(-5%, -5%); opacity: 0.6; }
 }
