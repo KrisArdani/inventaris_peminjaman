@@ -20,9 +20,9 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <link rel="stylesheet" href="../admin/admin.css?v=5">
     <style>
         .report-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
             margin-top: 1rem;
         }
         .report-card {

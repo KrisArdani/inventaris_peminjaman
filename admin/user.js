@@ -57,6 +57,9 @@
     }
 
     $('#btnAddUser').addEventListener('click', () => openFormModal());
+    if ($('#statsTimeFilter')) {
+        $('#statsTimeFilter').addEventListener('change', loadStats);
+    }
     $('#btnRefresh').addEventListener('click', () => { loadStats(); loadUsers(); });
     $('#modalClose').addEventListener('click', closeFormModal);
     $('#btnCancelForm').addEventListener('click', closeFormModal);
@@ -99,15 +102,25 @@
     // ===== Load Data =====
     async function loadStats() {
         try {
-            const data = await apiFetch('stats');
-            if (data.success) {
-                $('#statTotal').textContent = data.total;
-                $('#statAnggota').textContent = data.anggota;
-                $('#statAdmin').textContent = data.admin;
+            const timeFilter = $('#statsTimeFilter') ? $('#statsTimeFilter').value : 'all_time';
+            const res = await apiFetch('stats', { time_filter: timeFilter });
+            if (res.success) {
+                anim($('#statTotal'), res.total);
+                anim($('#statAnggota'), res.anggota);
+                anim($('#statAdmin'), res.admin);
+                
+                if ($('#labelTotal')) {
+                    $('#labelTotal').textContent = timeFilter === 'bulan_ini' ? 'Pengguna Baru' : 'Total Pengguna';
+                }
             }
         } catch (e) {
             console.error('Failed to load stats', e);
         }
+    }
+
+    function anim(el, val) {
+        if (!el) return;
+        el.textContent = val;
     }
 
     async function loadUsers() {

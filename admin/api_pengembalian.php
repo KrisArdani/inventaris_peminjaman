@@ -91,10 +91,18 @@ try {
 
         /* =============== STATS =============== */
         case 'stats':
+            $time_filter = $_GET['time_filter'] ?? 'bulan_ini';
+            
             $aktif     = $koneksi->query("SELECT COUNT(*) FROM peminjaman_detail WHERE status_item IN ('dipinjam', 'terlambat')")->fetchColumn();
             $terlambat = $koneksi->query("SELECT COUNT(*) FROM peminjaman_detail WHERE status_item = 'terlambat'")->fetchColumn();
-            $dikembalikan = $koneksi->query("SELECT COUNT(*) FROM peminjaman_detail WHERE status_item = 'dikembalikan' AND MONTH(tgl_kembali_rencana) = MONTH(CURRENT_DATE()) AND YEAR(tgl_kembali_rencana) = YEAR(CURRENT_DATE())")->fetchColumn();
-            $denda    = $koneksi->query("SELECT SUM(denda) FROM pengembalian WHERE MONTH(tgl_kembali_asli) = MONTH(CURRENT_DATE()) AND YEAR(tgl_kembali_asli) = YEAR(CURRENT_DATE())")->fetchColumn();
+            
+            if ($time_filter === 'all_time') {
+                $dikembalikan = $koneksi->query("SELECT COUNT(DISTINCT id_detail) FROM pengembalian")->fetchColumn();
+                $denda    = $koneksi->query("SELECT SUM(denda) FROM pengembalian")->fetchColumn();
+            } else {
+                $dikembalikan = $koneksi->query("SELECT COUNT(DISTINCT id_detail) FROM pengembalian WHERE MONTH(tgl_kembali_asli) = MONTH(CURRENT_DATE()) AND YEAR(tgl_kembali_asli) = YEAR(CURRENT_DATE())")->fetchColumn();
+                $denda    = $koneksi->query("SELECT SUM(denda) FROM pengembalian WHERE MONTH(tgl_kembali_asli) = MONTH(CURRENT_DATE()) AND YEAR(tgl_kembali_asli) = YEAR(CURRENT_DATE())")->fetchColumn();
+            }
 
             echo json_encode([
                 'success'      => true,

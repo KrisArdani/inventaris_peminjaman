@@ -48,6 +48,10 @@
     // ===== Event Listeners =====
     $('#btnAddBarang').addEventListener('click', () => openFormModal());
     $('#btnRefresh').addEventListener('click', () => { loadStats(); loadBarang(); });
+    
+    if ($('#statsTimeFilter')) {
+        $('#statsTimeFilter').addEventListener('change', loadStats);
+    }
     $('#modalClose').addEventListener('click', closeFormModal);
     $('#btnCancelForm').addEventListener('click', closeFormModal);
     $('#btnCancelDelete').addEventListener('click', closeDeleteModal);
@@ -110,12 +114,17 @@
     // ===== Load Stats =====
     async function loadStats() {
         try {
-            const data = await apiFetch('stats');
+            const timeFilter = $('#statsTimeFilter') ? $('#statsTimeFilter').value : 'all_time';
+            const data = await apiFetch('stats', { time_filter: timeFilter });
             if (data.success) {
                 animateNumber(statTotal, data.total);
                 animateNumber(statTersedia, data.tersedia);
                 animateNumber(statDipinjam, data.dipinjam);
                 animateNumber(statHabis, data.habis);
+                
+                if ($('#labelTotal')) {
+                    $('#labelTotal').textContent = timeFilter === 'bulan_ini' ? 'Barang Ditambahkan' : 'Total Barang';
+                }
             }
         } catch (e) {
             console.error('Stats error', e);

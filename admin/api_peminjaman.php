@@ -72,11 +72,22 @@ try {
 
         /* =============== STATS =============== */
         case 'stats':
-            $totalAll = $koneksi->query("SELECT COUNT(*) FROM peminjaman")->fetchColumn();
+            $time_filter = $_GET['time_filter'] ?? 'all_time';
+
+            if ($time_filter === 'bulan_ini') {
+                $totalAll = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE MONTH(tgl_pengajuan) = MONTH(CURRENT_DATE()) AND YEAR(tgl_pengajuan) = YEAR(CURRENT_DATE())")->fetchColumn();
+                $approved = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE status_approval='disetujui' AND MONTH(tgl_pengajuan) = MONTH(CURRENT_DATE()) AND YEAR(tgl_pengajuan) = YEAR(CURRENT_DATE())")->fetchColumn();
+                $rejected = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE status_approval='ditolak' AND MONTH(tgl_pengajuan) = MONTH(CURRENT_DATE()) AND YEAR(tgl_pengajuan) = YEAR(CURRENT_DATE())")->fetchColumn();
+            } else {
+                $totalAll = $koneksi->query("SELECT COUNT(*) FROM peminjaman")->fetchColumn();
+                $approved = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE status_approval='disetujui'")->fetchColumn();
+                $rejected = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE status_approval='ditolak'")->fetchColumn();
+            }
+            
+            // Real-time states are not filtered by month
             $pending  = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE status_approval='pending'")->fetchColumn();
-            $approved = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE status_approval='disetujui'")->fetchColumn();
-            $rejected = $koneksi->query("SELECT COUNT(*) FROM peminjaman WHERE status_approval='ditolak'")->fetchColumn();
             $terlambat = $koneksi->query("SELECT COUNT(DISTINCT pd.id_peminjaman) FROM peminjaman_detail pd WHERE pd.status_item='terlambat'")->fetchColumn();
+            $aktif    = $koneksi->query("SELECT COUNT(DISTINCT pd.id_peminjaman) FROM peminjaman_detail pd WHERE pd.status_item IN ('dipinjam', 'terlambat')")->fetchColumn();
 
             echo json_encode([
                 'success'   => true,
@@ -85,6 +96,7 @@ try {
                 'approved'  => (int)$approved,
                 'rejected'  => (int)$rejected,
                 'terlambat' => (int)$terlambat,
+                'aktif'     => (int)$aktif,
             ]);
             break;
 

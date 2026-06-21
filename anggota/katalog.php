@@ -18,7 +18,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Barang - Inventaris BEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="anggota.css?v=4.0">
+    <link rel="stylesheet" href="anggota.css?v=5.0">
 </head>
 <body>
 
@@ -28,7 +28,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="sidebar-brand-icon"><img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+            <div class="sidebar-brand-icon sidebar-brand-icon--img"><img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya"></div>
             <span>Inventaris BEM</span>
         </div>
         <nav class="sidebar-nav">

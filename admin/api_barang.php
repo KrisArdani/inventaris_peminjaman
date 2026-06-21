@@ -68,10 +68,18 @@ try {
 
         // ---- STATS ----
         case 'stats':
-            $total     = $koneksi->query("SELECT COUNT(*) FROM barang")->fetchColumn();
+            $time_filter = $_GET['time_filter'] ?? 'all_time';
+            
+            if ($time_filter === 'bulan_ini') {
+                $total = $koneksi->query("SELECT COUNT(*) FROM barang WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())")->fetchColumn();
+            } else {
+                $total = $koneksi->query("SELECT COUNT(*) FROM barang")->fetchColumn();
+            }
+            
             $tersedia  = $koneksi->query("SELECT SUM(stok_tersedia) FROM barang")->fetchColumn();
             $dipinjam  = $koneksi->query("SELECT SUM(stok_total - stok_tersedia) FROM barang")->fetchColumn();
             $habis     = $koneksi->query("SELECT COUNT(*) FROM barang WHERE stok_tersedia = 0")->fetchColumn();
+            $pinjaman_aktif = $koneksi->query("SELECT COUNT(DISTINCT id_peminjaman) FROM peminjaman_detail WHERE status_item IN ('dipinjam', 'terlambat')")->fetchColumn();
 
             echo json_encode([
                 'success'   => true,
@@ -79,6 +87,43 @@ try {
                 'tersedia'  => (int)$tersedia,
                 'dipinjam'  => (int)$dipinjam,
                 'habis'     => (int)$habis,
+                'pinjaman_aktif' => (int)$pinjaman_aktif,
+            ]);
+            break;
+
+        // ---- CHART DATA ----
+        case 'chart_data':
+            // 1. Tren Peminjaman 6 bulan terakhir
+            $sqlTren = "SELECT DATE_FORMAT(tgl_pengajuan, '%Y-%m') as bulan, COUNT(*) as jumlah
+                        FROM peminjaman
+                        GROUP BY DATE_FORMAT(tgl_pengajuan, '%Y-%m')
+                        ORDER BY DATE_FORMAT(tgl_pengajuan, '%Y-%m') ASC
+                        LIMIT 6";
+            $stmtTren = $koneksi->query($sqlTren);
+            $tren = $stmtTren->fetchAll(PDO::FETCH_ASSOC);
+
+            // 2. Top 5 Barang terpopuler
+            $sqlTop = "SELECT b.nama_barang, COUNT(d.id_detail) as total_dipinjam
+                       FROM peminjaman_detail d
+                       JOIN barang b ON d.id_barang = b.id_barang
+                       GROUP BY d.id_barang
+                       ORDER BY total_dipinjam DESC
+                       LIMIT 5";
+            $stmtTop = $koneksi->query($sqlTop);
+            $top = $stmtTop->fetchAll(PDO::FETCH_ASSOC);
+
+            // 3. Distribusi Kategori Barang
+            $sqlKat = "SELECT kategori, COUNT(*) as jumlah 
+                       FROM barang 
+                       GROUP BY kategori";
+            $stmtKat = $koneksi->query($sqlKat);
+            $kat = $stmtKat->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode([
+                'success'  => true,
+                'tren'     => $tren,
+                'top'      => $top,
+                'kategori' => $kat
             ]);
             break;
 

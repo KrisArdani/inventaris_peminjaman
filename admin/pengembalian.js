@@ -35,6 +35,10 @@
         searchTimer = setTimeout(() => { currentPage = 1; loadData(); }, 350);
     });
     filterStatus.addEventListener('change', () => { currentPage = 1; loadData(); });
+    
+    if ($('#statsTimeFilter')) {
+        $('#statsTimeFilter').addEventListener('change', loadStats);
+    }
 
     // Close modals on overlay click
     [modalProses, modalDetail].forEach(m => {
@@ -69,12 +73,20 @@
     // ===== Stats =====
     async function loadStats() {
         try {
-            const d = await apiFetch('stats');
+            const timeFilter = $('#statsTimeFilter') ? $('#statsTimeFilter').value : 'bulan_ini';
+            const d = await apiFetch('stats', { time_filter: timeFilter });
             if (d.success) {
                 anim($('#statAktif'), d.aktif);
                 anim($('#statTerlambat'), d.terlambat);
                 anim($('#statDikembalikan'), d.dikembalikan);
                 $('#statDenda').textContent = formatCurrency(d.denda || 0);
+                
+                if ($('#labelDikembalikan')) {
+                    $('#labelDikembalikan').textContent = timeFilter === 'all_time' ? 'Dikembalikan (Semua Waktu)' : 'Dikembalikan (Bulan Ini)';
+                }
+                if ($('#labelDenda')) {
+                    $('#labelDenda').textContent = timeFilter === 'all_time' ? 'Denda (Semua Waktu)' : 'Denda (Bulan Ini)';
+                }
             }
         } catch (e) { console.error(e); }
     }

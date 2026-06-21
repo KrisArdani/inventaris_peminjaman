@@ -17,7 +17,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <title>Manajemen Pengembalian — Admin Inventaris</title>
     <meta name="description" content="Kelola pengembalian barang inventaris BEM Politeknik Purbaya">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=5">
+    <link rel="stylesheet" href="admin.css?v=6">
     <link rel="stylesheet" href="peminjaman.css"> <!-- We can reuse some classes from peminjaman.css -->
 </head>
 <body>
@@ -89,41 +89,47 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <div class="page-container">
 
         <!-- Page Header -->
-        <div class="page-header">
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
                 <h1 class="page-title">Manajemen Pengembalian</h1>
                 <p class="page-subtitle">Pantau barang yang dipinjam dan proses pengembalian</p>
+            </div>
+            <div class="header-actions">
+                <select class="filter-select" id="statsTimeFilter" style="background-color: var(--surface); border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <option value="bulan_ini">Bulan Ini</option>
+                    <option value="all_time">Semua Waktu</option>
+                </select>
             </div>
         </div>
 
         <!-- Stats Row -->
         <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-icon blue"><i class="fa-solid fa-people-carry-box"></i></div>
+            <div class="stat-card" data-tooltip="Total fisik barang yang sedang di luar/dipinjam saat ini">
+                <div class="stat-icon" style="background:#dcfce7;color:#16a34a"><i class="fa-solid fa-file-signature"></i></div>
                 <div>
                     <div class="stat-value" id="statAktif">—</div>
                     <div class="stat-label">Item Dipinjam</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Barang yang belum dikembalikan melewati batas waktu">
                 <div class="stat-icon red"><i class="fa-solid fa-clock"></i></div>
                 <div>
                     <div class="stat-value" id="statTerlambat">—</div>
                     <div class="stat-label">Item Terlambat</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Jumlah transaksi pengembalian barang yang sukses">
                 <div class="stat-icon green"><i class="fa-solid fa-check-double"></i></div>
                 <div>
                     <div class="stat-value" id="statDikembalikan">—</div>
-                    <div class="stat-label">Dikembalikan (Bulan Ini)</div>
+                    <div class="stat-label" id="labelDikembalikan">Dikembalikan (Bulan Ini)</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Total denda keterlambatan atau kerusakan yang terkumpul">
                 <div class="stat-icon amber"><i class="fa-solid fa-coins"></i></div>
                 <div>
                     <div class="stat-value" id="statDenda" style="font-size:1.25rem;line-height:1.2;margin-top:0.25rem">—</div>
-                    <div class="stat-label">Denda (Bulan Ini)</div>
+                    <div class="stat-label" id="labelDenda">Denda (Bulan Ini)</div>
                 </div>
             </div>
         </div>

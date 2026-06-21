@@ -150,10 +150,19 @@ try {
             break;
 
         case 'stats':
-            $total = $koneksi->query("SELECT COUNT(*) FROM users")->fetchColumn();
-            $admin = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='admin'")->fetchColumn();
-            $anggota = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='anggota'")->fetchColumn();
-            $kepala = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='kepala'")->fetchColumn();
+            $time_filter = $_GET['time_filter'] ?? 'all_time';
+
+            if ($time_filter === 'bulan_ini') {
+                $total = $koneksi->query("SELECT COUNT(*) FROM users WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())")->fetchColumn();
+                $admin = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='admin' AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())")->fetchColumn();
+                $anggota = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='anggota' AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())")->fetchColumn();
+                $kepala = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='kepala' AND MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())")->fetchColumn();
+            } else {
+                $total = $koneksi->query("SELECT COUNT(*) FROM users")->fetchColumn();
+                $admin = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='admin'")->fetchColumn();
+                $anggota = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='anggota'")->fetchColumn();
+                $kepala = $koneksi->query("SELECT COUNT(*) FROM users WHERE role='kepala'")->fetchColumn();
+            }
 
             echo json_encode([
                 'success' => true,

@@ -1,0 +1,6 @@
+
+/* Tooltip for stat-card */
+.stat-card[data-tooltip] { position: relative; }
+.stat-card[data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background-color: #1e293b; color: #fff; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.75rem; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.2s ease-in-out; margin-bottom: 0.5rem; z-index: 10; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+.stat-card[data-tooltip]:hover::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent; margin-bottom: 0px; opacity: 0; transition: opacity 0.2s ease-in-out; z-index: 10; pointer-events: none; }
+.stat-card[data-tooltip]:hover::after, .stat-card[data-tooltip]:hover::before { opacity: 1; }

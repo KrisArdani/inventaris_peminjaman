@@ -18,7 +18,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Anggota - Inventaris BEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="anggota.css?v=4.0">
+    <link rel="stylesheet" href="anggota.css?v=5.0">
 </head>
 <body>
 
@@ -28,7 +28,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="sidebar-brand-icon"><img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya" style="width: 32px; height: 32px; border-radius: 50%;"></div>
+            <div class="sidebar-brand-icon sidebar-brand-icon--img"><img src="../assets/images/logo bem.png" alt="Logo BEM KM Politeknik Purbaya"></div>
             <span>Inventaris BEM</span>
         </div>
         <nav class="sidebar-nav">
@@ -83,23 +83,27 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                     <h1>Halo, <?= htmlspecialchars(explode(' ', trim($_SESSION['nama_lengkap']))[0]); ?>! 👋</h1>
                     <p>Selamat datang di Dashboard Anggota BEM. Pantau status peminjaman, lihat riwayat, atau jelajahi katalog inventaris barang BEM Politeknik Purbaya.</p>
                 </div>
-                <div>
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <select class="filter-select" id="statsTimeFilter" style="background-color: var(--surface); border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; padding: 0.75rem 1rem; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        <option value="all_time">Semua Waktu</option>
+                        <option value="bulan_ini">Bulan Ini</option>
+                    </select>
                     <a href="katalog.php" class="btn"><i class="fa-solid fa-layer-group"></i> Eksplor Inventaris</a>
                 </div>
             </div>
 
             <!-- Stats Grid -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="Total keseluruhan peminjaman yang pernah Anda ajukan">
                     <div class="stat-icon icon-blue">
                         <i class="fa-solid fa-box"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>Total Pengajuan</h3>
+                        <h3 id="labelTotal">Total Pengajuan</h3>
                         <div class="stat-value" id="statTotal">0</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="Jumlah peminjaman yang sedang menunggu persetujuan admin">
                     <div class="stat-icon icon-yellow">
                         <i class="fa-solid fa-clock"></i>
                     </div>
@@ -108,7 +112,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                         <div class="stat-value" id="statPending">0</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="Barang yang saat ini sedang Anda pinjam dan belum dikembalikan">
                     <div class="stat-icon icon-green">
                         <i class="fa-solid fa-hand-holding-hand"></i>
                     </div>
@@ -117,7 +121,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
                         <div class="stat-value" id="statAktif">0</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="Barang yang belum Anda kembalikan melewati batas rencana kembali">
                     <div class="stat-icon icon-red">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
@@ -263,13 +267,18 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
 
         async function loadStats() {
             try {
-                const res = await fetch('api_anggota.php?action=stats');
+                const timeFilter = document.getElementById('statsTimeFilter') ? document.getElementById('statsTimeFilter').value : 'all_time';
+                const res = await fetch('api_anggota.php?action=stats&time_filter=' + timeFilter);
                 const data = await res.json();
                 if (data.success) {
                     animateValue('statTotal', 0, data.total, 1000);
                     animateValue('statPending', 0, data.pending, 1000);
                     animateValue('statAktif', 0, data.aktif, 1000);
                     animateValue('statTerlambat', 0, data.terlambat, 1000);
+                    
+                    if(document.getElementById('labelTotal')) {
+                        document.getElementById('labelTotal').textContent = timeFilter === 'bulan_ini' ? 'Pengajuan (Bulan Ini)' : 'Total Pengajuan';
+                    }
                 }
             } catch (err) { console.error('Failed to load stats', err); }
         }
@@ -416,6 +425,10 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
 
         function closeModal() { document.getElementById('detailModal').classList.remove('active'); }
         window.onclick = function(event) { if (event.target == document.getElementById('detailModal')) closeModal(); }
+        
+        if (document.getElementById('statsTimeFilter')) {
+            document.getElementById('statsTimeFilter').addEventListener('change', loadStats);
+        }
     </script>
 </body>
 </html>

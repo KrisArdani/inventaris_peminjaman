@@ -83,9 +83,14 @@ try {
 
         case 'stats':
             $id_user = $_SESSION['user_id'];
+            $time_filter = $_GET['time_filter'] ?? 'all_time';
             
             // Total pengajuan
-            $total = $koneksi->prepare("SELECT COUNT(*) FROM peminjaman WHERE id_user = ?");
+            if ($time_filter === 'bulan_ini') {
+                $total = $koneksi->prepare("SELECT COUNT(*) FROM peminjaman WHERE id_user = ? AND MONTH(tgl_pengajuan) = MONTH(CURRENT_DATE()) AND YEAR(tgl_pengajuan) = YEAR(CURRENT_DATE())");
+            } else {
+                $total = $koneksi->prepare("SELECT COUNT(*) FROM peminjaman WHERE id_user = ?");
+            }
             $total->execute([$id_user]);
             
             // Pending

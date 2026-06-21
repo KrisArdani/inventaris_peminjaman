@@ -17,7 +17,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <title>Manajemen Barang — Admin Inventaris</title>
     <meta name="description" content="Kelola data inventaris barang BEM Politeknik Purbaya">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=5">
+    <link rel="stylesheet" href="admin.css?v=6">
 </head>
 <body>
 
@@ -90,41 +90,45 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <div class="page-container">
 
         <!-- Page Header -->
-        <div class="page-header">
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
                 <h1 class="page-title">Manajemen Barang</h1>
-                <p class="page-subtitle">Kelola seluruh data inventaris barang BEM</p>
+                <p class="page-subtitle">Kelola data inventaris, tambah, edit, atau hapus barang.</p>
             </div>
-            <button class="btn btn-primary" id="btnAddBarang">
-                <i class="fa-solid fa-plus"></i> Tambah Barang
-            </button>
+            <div class="header-actions">
+                <select class="filter-select" id="statsTimeFilter" style="background-color: var(--surface); border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <option value="all_time">Semua Waktu</option>
+                    <option value="bulan_ini">Bulan Ini</option>
+                </select>
+                <button class="btn btn-primary" id="btnAddBarang"><i class="fa-solid fa-plus"></i> Tambah Barang</button>
+            </div>
         </div>
 
         <!-- Stats Row -->
-        <div class="stats-row" id="statsRow">
-            <div class="stat-card">
-                <div class="stat-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div class="stats-row">
+            <div class="stat-card" data-tooltip="Keseluruhan item barang yang tercatat di inventaris">
+                <div class="stat-icon blue"><i class="fa-solid fa-boxes-stacked"></i></div>
                 <div>
                     <div class="stat-value" id="statTotal">—</div>
-                    <div class="stat-label">Total Barang</div>
+                    <div class="stat-label" id="labelTotal">Total Barang</div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon blue"><i class="fa-solid fa-check-circle"></i></div>
+            <div class="stat-card" data-tooltip="Sisa fisik stok barang yang siap dipinjam saat ini">
+                <div class="stat-icon green"><i class="fa-solid fa-check-circle"></i></div>
                 <div>
                     <div class="stat-value" id="statTersedia">—</div>
-                    <div class="stat-label">Stok Tersedia</div>
+                    <div class="stat-label">Tersedia</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Total fisik stok barang yang sedang di luar/dipinjam saat ini">
                 <div class="stat-icon amber"><i class="fa-solid fa-hand-holding-hand"></i></div>
                 <div>
                     <div class="stat-value" id="statDipinjam">—</div>
-                    <div class="stat-label">Sedang Dipinjam</div>
+                    <div class="stat-label">Dipinjam</div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon red"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div class="stat-card" data-tooltip="Jumlah item barang yang persediaannya telah habis">
+                <div class="stat-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <div>
                     <div class="stat-value" id="statHabis">—</div>
                     <div class="stat-label">Stok Habis</div>

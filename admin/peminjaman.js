@@ -32,6 +32,9 @@
     // ===== Events =====
     $('#btnRefresh').addEventListener('click', () => { loadStats(); loadData(); });
     $('#btnCreatePeminjaman').addEventListener('click', openCreateModal);
+    if ($('#statsTimeFilter')) {
+        $('#statsTimeFilter').addEventListener('change', loadStats);
+    }
     $('#btnConfirmReject').addEventListener('click', confirmReject);
     $('#btnConfirmApprove').addEventListener('click', confirmApprove);
     $('#btnAddItem').addEventListener('click', addItemRow);
@@ -73,11 +76,14 @@
     // ===== Stats =====
     async function loadStats() {
         try {
-            const d = await apiFetch('stats');
+            const timeFilter = $('#statsTimeFilter') ? $('#statsTimeFilter').value : 'all_time';
+            const d = await apiFetch('stats', { time_filter: timeFilter });
             if (d.success) {
                 anim($('#statTotal'), d.total);
                 anim($('#statPending'), d.pending);
                 anim($('#statApproved'), d.approved);
+                if ($('#statRejected')) anim($('#statRejected'), d.rejected);
+                if ($('#statAktif')) anim($('#statAktif'), d.aktif);
                 anim($('#statTerlambat'), d.terlambat);
             }
         } catch (e) { console.error(e); }

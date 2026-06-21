@@ -17,8 +17,8 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <title>Manajemen Peminjaman — Admin Inventaris</title>
     <meta name="description" content="Kelola peminjaman barang inventaris BEM Politeknik Purbaya">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=5">
-    <link rel="stylesheet" href="peminjaman.css">
+    <link rel="stylesheet" href="admin.css?v=6">
+    <link rel="stylesheet" href="peminjaman.css?v=2">
 </head>
 <body>
 
@@ -89,40 +89,60 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <div class="page-container">
 
         <!-- Page Header -->
-        <div class="page-header">
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
                 <h1 class="page-title">Manajemen Peminjaman</h1>
-                <p class="page-subtitle">Kelola pengajuan dan status peminjaman barang</p>
+                <p class="page-subtitle">Kelola pengajuan, status, dan riwayat peminjaman.</p>
             </div>
-            <button class="btn btn-primary" id="btnCreatePeminjaman">
-                <i class="fa-solid fa-plus"></i> Buat Peminjaman
-            </button>
+            <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
+                <select class="filter-select" id="statsTimeFilter" style="background-color: var(--surface); border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <option value="all_time">Semua Waktu</option>
+                    <option value="bulan_ini">Bulan Ini</option>
+                </select>
+                <button class="btn btn-primary" id="btnCreatePeminjaman">
+                    <i class="fa-solid fa-plus"></i> Buat Peminjaman
+                </button>
+            </div>
         </div>
 
         <!-- Stats Row -->
         <div class="stats-row">
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Keseluruhan transaksi peminjaman yang pernah diajukan">
                 <div class="stat-icon blue"><i class="fa-solid fa-clipboard-list"></i></div>
                 <div>
                     <div class="stat-value" id="statTotal">—</div>
                     <div class="stat-label">Total Peminjaman</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Pengajuan pinjaman baru yang belum direspons admin">
                 <div class="stat-icon amber"><i class="fa-solid fa-hourglass-half"></i></div>
                 <div>
                     <div class="stat-value" id="statPending">—</div>
                     <div class="stat-label">Menunggu Persetujuan</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Transaksi peminjaman yang telah di-ACC admin">
                 <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
                 <div>
                     <div class="stat-value" id="statApproved">—</div>
                     <div class="stat-label">Disetujui</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Transaksi yang telah ditolak oleh admin">
+                <div class="stat-icon" style="background: rgba(100,116,139,.12); color: #64748b;"><i class="fa-solid fa-ban"></i></div>
+                <div>
+                    <div class="stat-value" id="statRejected">—</div>
+                    <div class="stat-label">Ditolak</div>
+                </div>
+            </div>
+            <div class="stat-card" data-tooltip="Barang yang saat ini sedang dipinjam dan belum kembali">
+                <div class="stat-icon" style="background:#dcfce7;color:#16a34a"><i class="fa-solid fa-file-signature"></i></div>
+                <div>
+                    <div class="stat-value" id="statAktif">—</div>
+                    <div class="stat-label">Pinjaman Aktif</div>
+                </div>
+            </div>
+            <div class="stat-card" data-tooltip="Barang yang melewati batas rencana pengembalian">
                 <div class="stat-icon red"><i class="fa-solid fa-clock"></i></div>
                 <div>
                     <div class="stat-value" id="statTerlambat">—</div>

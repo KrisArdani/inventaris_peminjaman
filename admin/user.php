@@ -17,7 +17,7 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
     <title>Kelola User — Admin Inventaris</title>
     <meta name="description" content="Kelola akun pengguna aplikasi inventaris BEM">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=5">
+    <link rel="stylesheet" href="admin.css?v=6">
     <style>
         .role-badge {
             padding: 0.25rem 0.75rem;
@@ -107,33 +107,39 @@ $initials = mb_strtoupper(mb_substr($initials, 0, 2));
 
     <div class="page-container">
         
-        <div class="page-header">
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
                 <h1 class="page-title">Kelola Pengguna</h1>
                 <p class="page-subtitle">Manajemen akun admin, anggota, dan kepala biro.</p>
             </div>
-            <button class="btn btn-primary" id="btnAddUser">
-                <i class="fa-solid fa-user-plus"></i> Tambah User
-            </button>
+            <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
+                <select class="filter-select" id="statsTimeFilter" style="background-color: var(--surface); border: 2px solid var(--primary); color: var(--primary); border-radius: 8px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <option value="all_time">Semua Waktu</option>
+                    <option value="bulan_ini">Bulan Ini</option>
+                </select>
+                <button class="btn btn-primary" id="btnAddUser">
+                    <i class="fa-solid fa-user-plus"></i> Tambah User
+                </button>
+            </div>
         </div>
 
         <!-- Stats -->
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Total keseluruhan pengguna terdaftar">
                 <div class="stat-icon" style="background:#e0e7ff;color:#4f46e5"><i class="fa-solid fa-users"></i></div>
                 <div class="stat-info">
-                    <p class="stat-label">Total Pengguna</p>
+                    <p class="stat-label" id="labelTotal">Total Pengguna</p>
                     <h3 class="stat-value" id="statTotal">-</h3>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Total akun dengan role Anggota">
                 <div class="stat-icon" style="background:#dbeafe;color:#1d4ed8"><i class="fa-solid fa-user-tag"></i></div>
                 <div class="stat-info">
                     <p class="stat-label">Total Anggota</p>
                     <h3 class="stat-value" id="statAnggota">-</h3>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-tooltip="Total akun dengan role Admin">
                 <div class="stat-icon" style="background:#fee2e2;color:#b91c1c"><i class="fa-solid fa-user-shield"></i></div>
                 <div class="stat-info">
                     <p class="stat-label">Total Admin</p>
