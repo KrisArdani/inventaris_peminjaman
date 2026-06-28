@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Departemen Kominfo',
             desc: 'Mengelola informasi, media sosial, publikasi, dan desain visual organisasi.',
             members: [
-                { name: 'Ahmad Assadulah', role: 'Kepala Departemen', initial: 'AA' },
+                { name: 'Ahmad Asadullah', role: 'Kepala Departemen', initial: 'AA' },
                 { name: 'Zahwa Amir', role: 'Staff Desain Grafis', initial: 'ZA' }
             ]
         },
